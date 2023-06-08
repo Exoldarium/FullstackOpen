@@ -43,28 +43,29 @@ const App = () => {
     average: average,
     positive: positive,
   };
+  const copy = { ...obj };
 
-  const keys = Object.keys(obj);
-  const empty = obj.good === 0 && obj.neutral === 0 && obj.bad === 0;
+  const keys = Object.keys(copy);
+  const empty = copy.good === 0 && copy.neutral === 0 && copy.bad === 0;
   const showStatistics = keys.map(text => {
     return (
-      <Statistics text={text} obj={obj} key={text} />
+      <Statistics text={text} obj={copy} key={text} />
     )
   });
 
   function handleClick(e) {
     if (e.target) {
-      obj[e.target.name] += 1;
+      copy[e.target.name] += 1;
     }
-    setGood(obj.good);
-    setNeutral(obj.neutral);
-    setBad(obj.bad);
+    setGood(copy.good);
+    setNeutral(copy.neutral);
+    setBad(copy.bad);
   }
 
   return (
     <div>
       <h1>give feedback</h1>
-      <Button obj={obj} handleClick={handleClick} />
+      <Button obj={copy} handleClick={handleClick} />
       <h1>statistics</h1>
       <table>
         {empty ?
