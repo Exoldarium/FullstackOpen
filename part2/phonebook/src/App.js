@@ -1,9 +1,11 @@
+import './index.css'
 import { useEffect, useState } from 'react'
-import PersonForm from './PersonForm'
-import Persons from './Persons'
-import Filter from './Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
+import Filter from './components/Filter'
 import personsService from './services/persons'
 import { v4 as uuidv4 } from 'uuid';
+import NotificationMessage from './components/NotificationMessage'
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -11,10 +13,12 @@ const App = () => {
     name: '',
     number: '',
   });
+  const [errorMessage, setErrorMessage] = useState('');
   const personsCopy = [...persons];
   const displayPersons = persons.map(person => <Persons persons={person} key={person.id} deletePerson={deletePerson} />);
   const personForm = <PersonForm getNewInput={getNewInput} input={newName} addNewPerson={addNewPerson} />;
-  const filter = <Filter filterNames={filterNames} />
+  const filter = <Filter filterNames={filterNames} />;
+  const notificationMessage = <NotificationMessage message={errorMessage} />;
 
   // get all the persons from db
   useEffect(() => {
@@ -45,7 +49,9 @@ const App = () => {
         const filterPerson = personsCopy.filter(person => person.id !== findPerson.id);
         const updatePerson = await personsService
           .updatePerson(findPerson.id, newName)
-          .catch(error => console.log(error));
+          .catch(error => {
+            console.log(error);
+          });
         setPersons(filterPerson.concat(updatePerson));
         setNewName({
           name: '',
@@ -54,6 +60,7 @@ const App = () => {
       }
       return;
     }
+
     const newPerson = await personsService
       .addPerson(newName)
       .catch(error => console.log(error));
@@ -62,6 +69,11 @@ const App = () => {
       name: '',
       number: '',
     });
+
+    setErrorMessage(`Added ${newPerson.name}`);
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 5000)
   }
 
   // delete selected person from the server and set new array
@@ -86,6 +98,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      {notificationMessage}
       {filter}
       <h3>Add a new person</h3>
       {personForm}
