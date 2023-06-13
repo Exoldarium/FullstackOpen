@@ -87,7 +87,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       {filter}
-      <h3>Add a new</h3>
+      <h3>Add a new person</h3>
       {personForm}
       <h3>Numbers</h3>
       {displayPersons}
