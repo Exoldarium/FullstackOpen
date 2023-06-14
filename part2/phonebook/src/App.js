@@ -15,7 +15,7 @@ const App = () => {
   });
   const [errorMessage, setErrorMessage] = useState('');
   const personsCopy = [...persons];
-  const displayPersons = persons.map(person => <Persons persons={person} key={person.id} deletePerson={deletePerson} />);
+  const displayPersons = personsCopy.map(person => <Persons persons={person} key={person.id} deletePerson={deletePerson} />);
   const personForm = <PersonForm getNewInput={getNewInput} input={newName} addNewPerson={addNewPerson} />;
   const filter = <Filter filterNames={filterNames} />;
   const notificationMessage = <NotificationMessage message={errorMessage} />;
@@ -28,7 +28,7 @@ const App = () => {
         .catch(error => console.log(error));
       setPersons(data);
     })();
-  }, []);
+  }, [persons]);
 
   // dynamically grab user input
   function getNewInput(e) {
