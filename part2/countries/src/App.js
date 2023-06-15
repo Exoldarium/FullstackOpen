@@ -28,7 +28,9 @@ function App() {
   // grab data
   useEffect(() => {
     (async () => {
-      const countries = await countryService.getCountries();
+      const countries = await countryService
+        .getCountries()
+        .catch(err => console.log(err));
       setCountry(countries);
     })();
   }, []);
@@ -38,7 +40,9 @@ function App() {
     const { value } = e.target;
     const filter = countriesCopy.filter(country => country.name.common.toLowerCase().includes(value.toLowerCase()));
     if (filter.length === 1) {
-      const weather = await countryService.getWeather(filter[0].capital[0]);
+      const weather = await countryService
+        .getWeather(filter[0].capital[0])
+        .catch(err => console.log(err));
       setWeather(weather);
     }
     if (value) {
