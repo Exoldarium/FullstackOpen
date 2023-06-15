@@ -18,7 +18,7 @@ export default function SingleCountry({ country, weather }) {
       <div>
         <h1>Weather in {country.capital[0]}</h1>
         <p>Temperature {convertToCelsius(weather.main.temp)} Celsius</p>
-        <img alt="weatherIcon" src={`https://openweathermap.org/img/wn/${weather.weather[0]?.icon}@2x.png`} />
+        <img alt="weatherIcon" src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} />
         <p>Wind {weather.wind.speed} m/s</p>
       </div>
     </>
