@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import CountriesList from './components/CountriesList';
-import DisplayWeather from './components/DisplayWeather';
 import FindCountries from './components/FindCountries';
 import SingleCountry from './components/SingleCountry';
 import countryService from './services/countries';
@@ -8,8 +7,9 @@ import './index.css'
 
 function App() {
   const [country, setCountry] = useState([]);
-  const [inputValue, setInputValue] = useState('');
   const [filteredList, setFilteredList] = useState([]);
+  const [weather, setWeather] = useState([]);
+  const [inputValue, setInputValue] = useState('');
 
   const countriesCopy = [...country];
   const filteredListCopy = [...filteredList];
@@ -23,8 +23,7 @@ function App() {
         inputValue={inputValue}
         displayClickedCountry={displayClickedCountry}
       />);
-  const displaySingleCountry = filteredListCopy.map(country => <SingleCountry country={country} key={country.cca2} />);
-  const displayWeather = <DisplayWeather />;
+  const displaySingleCountry = filteredListCopy.map(country => <SingleCountry country={country} key={country.cca2} weather={weather} />);
 
   // grab data
   useEffect(() => {
@@ -35,9 +34,13 @@ function App() {
   }, []);
 
   // filter countries based on input value
-  function findCountry(e) {
+  async function findCountry(e) {
     const { value } = e.target;
     const filter = countriesCopy.filter(country => country.name.common.toLowerCase().includes(value.toLowerCase()));
+    if (filter.length === 1) {
+      const weather = await countryService.getWeather(filter[0].capital[0]);
+      setWeather(weather);
+    }
     if (value) {
       setFilteredList(filter);
     }
@@ -47,9 +50,11 @@ function App() {
     setInputValue(value);
   }
 
-  function displayClickedCountry(e) {
+  async function displayClickedCountry(e) {
     const { name } = e.target;
     const findCountry = countriesCopy.find(country => country.name.common === name);
+    const weather = await countryService.getWeather(findCountry.capital[0]);
+    setWeather(weather);
     setFilteredList([findCountry]);
   }
 
@@ -57,7 +62,6 @@ function App() {
     <div >
       {findCountries}
       {filteredList.length === 1 ? displaySingleCountry : displayCountriesList}
-      {displayWeather}
     </div>
   );
 }
