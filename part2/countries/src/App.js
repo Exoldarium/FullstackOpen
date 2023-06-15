@@ -47,7 +47,6 @@ function App() {
     setInputValue(value);
   }
 
-  // display clicked country
   function displayClickedCountry(e) {
     const { name } = e.target;
     const findCountry = countriesCopy.find(country => country.name.common === name);

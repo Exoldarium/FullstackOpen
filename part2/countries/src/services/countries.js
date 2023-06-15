@@ -8,4 +8,10 @@ async function getCountries() {
   return countries;
 }
 
-export default { getCountries };
+async function getWeather() {
+  const res = await fetch(weatherUrl);
+  const weather = await res.json();
+  return weather;
+}
+
+export default { getCountries, getWeather };
