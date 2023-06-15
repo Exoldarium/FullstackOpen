@@ -57,7 +57,9 @@ function App() {
   async function displayClickedCountry(e) {
     const { name } = e.target;
     const findCountry = countriesCopy.find(country => country.name.common === name);
-    const weather = await countryService.getWeather(findCountry.capital[0]);
+    const weather = await countryService
+      .getWeather(findCountry.capital[0])
+      .catch(err => console.log(err));
     setWeather(weather);
     setFilteredList([findCountry]);
   }
