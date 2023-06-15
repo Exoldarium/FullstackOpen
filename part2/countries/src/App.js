@@ -23,7 +23,13 @@ function App() {
         inputValue={inputValue}
         displayClickedCountry={displayClickedCountry}
       />);
-  const displaySingleCountry = filteredListCopy.map(country => <SingleCountry country={country} key={country.cca2} weather={weather} />);
+  const displaySingleCountry = filteredListCopy
+    .map(country =>
+      <SingleCountry
+        country={country}
+        key={country.cca2}
+        weather={weather}
+      />);
 
   // grab data
   useEffect(() => {
