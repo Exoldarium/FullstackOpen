@@ -4,7 +4,6 @@ import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
 import personsService from './services/persons'
-import { v4 as uuidv4 } from 'uuid';
 import NotificationMessage from './components/NotificationMessage'
 
 const App = () => {
@@ -14,6 +13,7 @@ const App = () => {
     number: '',
   });
   const [errorMessage, setErrorMessage] = useState('');
+
   const personsCopy = [...persons];
   const displayPersons = personsCopy.map(person => <Persons persons={person} key={person.id} deletePerson={deletePerson} />);
   const personForm = <PersonForm getNewInput={getNewInput} input={newName} addNewPerson={addNewPerson} />;
@@ -28,13 +28,12 @@ const App = () => {
         .catch(error => console.log(error));
       setPersons(data);
     })();
-  }, [persons]);
+  }, []);
 
   // dynamically grab user input
   function getNewInput(e) {
     setNewName({
       ...newName,
-      id: uuidv4(),
       [e.target.name]: e.target.value,
     });
   }
@@ -43,15 +42,20 @@ const App = () => {
   async function addNewPerson(e) {
     e.preventDefault();
     const findPerson = personsCopy.find(person => person.name === newName.name);
+    const replaceDetails = { ...findPerson, number: newName.number };
+    const url = `http://localhost:3001/api/persons/${findPerson.id}`;
     // if the person is already in the db prompt user for a number change
     if (findPerson) {
+      // TODO:
+      // user should be able to add a new number for an existing entry
       if (window.confirm(`${newName.name} is already in the phonebook, replace the old number with new one?`)) {
         const filterPerson = personsCopy.filter(person => person.id !== findPerson.id);
         const updatePerson = await personsService
-          .updatePerson(findPerson.id, newName)
+          .updatePerson(url, replaceDetails)
           .catch(error => {
             console.log(error);
           });
+        // console.log(newName);
         setPersons(filterPerson.concat(updatePerson));
         setNewName({
           name: '',
@@ -92,6 +96,7 @@ const App = () => {
   // we are making everything lowercase so that any input lowercase or uppercase always gives correct result
   function filterNames(e) {
     const findPerson = personsCopy.filter(person => person.name.toLowerCase().includes(e.target.value.toLowerCase()));
+    console.log(findPerson)
     setPersons(findPerson);
   }
 

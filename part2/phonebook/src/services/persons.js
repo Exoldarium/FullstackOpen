@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = 'http://localhost:3001/persons';
+const url = 'http://localhost:3001/api/persons';
 
 async function getPersons() {
   const res = await axios.get(url);
@@ -13,12 +13,13 @@ async function addPerson(newPerson) {
 }
 
 async function deletePerson(id) {
-  const res = await axios.delete(`http://localhost:3001/persons/${id}`);
+  const res = await axios.delete(`http://localhost:3001/api/persons/${id}`);
   return res.data;
 }
 
-async function updatePerson(id, newPerson) {
-  const res = await axios.put(`http://localhost:3001/persons/${id}`, newPerson);
+async function updatePerson(url, newPerson) {
+  console.log(url, newPerson);
+  const res = await axios.put(url, newPerson);
   return res.data;
 }
 
