@@ -14,11 +14,14 @@ const App = () => {
     number: '',
   });
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
   const personsCopy = [...persons];
   const displayPersons = personsCopy.map(person => <Persons persons={person} key={person.id} deletePerson={deletePerson} />);
   const personForm = <PersonForm getNewInput={getNewInput} input={newName} addNewPerson={addNewPerson} />;
   const filter = <Filter filterNames={filterNames} />;
-  const notificationMessage = <NotificationMessage message={errorMessage} />;
+  const notificationMessage =
+    errorMessage ? <NotificationMessage error={errorMessage} /> : <NotificationMessage success={successMessage} />;
 
   // get all the persons from db
   useEffect(() => {
@@ -28,7 +31,7 @@ const App = () => {
         .catch(error => console.log(error));
       setPersons(data);
     })();
-  }, [persons]);
+  }, []);
 
   // dynamically grab user input
   function getNewInput(e) {
@@ -47,12 +50,18 @@ const App = () => {
     if (findPerson) {
       if (window.confirm(`${newName.name} is already in the phonebook, replace the old number with new one?`)) {
         const filterPerson = personsCopy.filter(person => person.id !== findPerson.id);
-        const updatePerson = await personsService
+        personsService
           .updatePerson(findPerson.id, newName)
+          .then(res => {
+            setPersons(filterPerson.concat(res));
+          })
           .catch(error => {
             console.log(error);
+            setErrorMessage(`Information of ${newName.name} has already been removed from the server`);
+            setTimeout(() => {
+              setErrorMessage(null);
+            }, 5000)
           });
-        setPersons(filterPerson.concat(updatePerson));
         setNewName({
           name: '',
           number: '',
@@ -61,19 +70,26 @@ const App = () => {
       return;
     }
 
-    const newPerson = await personsService
+    personsService
       .addPerson(newName)
-      .catch(error => console.log(error));
-    setPersons(personsCopy.concat(newPerson));
+      .then(res => {
+        setPersons(personsCopy.concat(res));
+        setSuccessMessage(`Added ${res.name}`);
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000)
+      })
+      .catch(error => {
+        console.log(error);
+        setErrorMessage('There was an error');
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000)
+      });
     setNewName({
       name: '',
       number: '',
     });
-
-    setErrorMessage(`Added ${newPerson.name}`);
-    setTimeout(() => {
-      setErrorMessage(null);
-    }, 5000)
   }
 
   // delete selected person from the server and set new array
