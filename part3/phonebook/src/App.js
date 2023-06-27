@@ -4,7 +4,6 @@ import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
 import personsService from './services/persons'
-import { v4 as uuidv4 } from 'uuid';
 import NotificationMessage from './components/NotificationMessage'
 
 const App = () => {
@@ -14,28 +13,34 @@ const App = () => {
     number: '',
   });
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
   const personsCopy = [...persons];
   const displayPersons = personsCopy.map(person => <Persons persons={person} key={person.id} deletePerson={deletePerson} />);
   const personForm = <PersonForm getNewInput={getNewInput} input={newName} addNewPerson={addNewPerson} />;
   const filter = <Filter filterNames={filterNames} />;
-  const notificationMessage = <NotificationMessage message={errorMessage} />;
+  const notificationMessage =
+    errorMessage ? <NotificationMessage error={errorMessage} /> : <NotificationMessage success={successMessage} />;
 
   // get all the persons from db
   useEffect(() => {
     (async () => {
       const data = await personsService
         .getPersons()
-        .catch(error => console.log(error));
+        .catch(error => {
+          console.log(error);
+          setErrorMessage(error.response.data.error);
+        });
       setPersons(data);
     })();
-  }, [persons]);
+  }, []);
 
-  // dynamically grab user input
+  // dynamically grab user input and parse to int if input is number
   function getNewInput(e) {
+    const { name, value } = e.target;
     setNewName({
       ...newName,
-      id: uuidv4(),
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   }
 
@@ -43,14 +48,17 @@ const App = () => {
   async function addNewPerson(e) {
     e.preventDefault();
     const findPerson = personsCopy.find(person => person.name === newName.name);
+    const replaceDetails = { ...findPerson, name: newName.name, number: Number(newName.number) };
     // if the person is already in the db prompt user for a number change
     if (findPerson) {
       if (window.confirm(`${newName.name} is already in the phonebook, replace the old number with new one?`)) {
+        // filter the person that we are updating
         const filterPerson = personsCopy.filter(person => person.id !== findPerson.id);
         const updatePerson = await personsService
-          .updatePerson(findPerson.id, newName)
+          .updatePerson(findPerson.id, replaceDetails)
           .catch(error => {
             console.log(error);
+            setErrorMessage(error.response.data.error);
           });
         setPersons(filterPerson.concat(updatePerson));
         setNewName({
@@ -61,19 +69,29 @@ const App = () => {
       return;
     }
 
-    const newPerson = await personsService
+    // add a new person
+    // const convertToNumber = { ...newName, number: Number(newName.number) };
+    // console.log(convertToNumber);
+    personsService
       .addPerson(newName)
-      .catch(error => console.log(error));
-    setPersons(personsCopy.concat(newPerson));
+      .then(res => {
+        setPersons(personsCopy.concat(res));
+        setSuccessMessage(`Added ${res.name}`);
+        setTimeout(() => {
+          setSuccessMessage(null);
+        }, 5000)
+      })
+      .catch(error => {
+        console.log(error);
+        setErrorMessage(error.response.data.error);
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000)
+      });
     setNewName({
       name: '',
       number: '',
     });
-
-    setErrorMessage(`Added ${newPerson.name}`);
-    setTimeout(() => {
-      setErrorMessage(null);
-    }, 5000)
   }
 
   // delete selected person from the server and set new array
@@ -92,6 +110,7 @@ const App = () => {
   // we are making everything lowercase so that any input lowercase or uppercase always gives correct result
   function filterNames(e) {
     const findPerson = personsCopy.filter(person => person.name.toLowerCase().includes(e.target.value.toLowerCase()));
+    console.log(findPerson)
     setPersons(findPerson);
   }
 
