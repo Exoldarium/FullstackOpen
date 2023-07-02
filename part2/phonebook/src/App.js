@@ -25,12 +25,10 @@ const App = () => {
 
   // get all the persons from db
   useEffect(() => {
-    (async () => {
-      const data = await personsService
-        .getPersons()
-        .catch(error => console.log(error));
-      setPersons(data);
-    })();
+    personsService
+      .getPersons()
+      .then(res => setPersons(res))
+      .catch(error => console.log(error));
   }, []);
 
   // dynamically grab user input

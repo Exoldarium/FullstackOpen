@@ -2,24 +2,24 @@ import axios from "axios";
 
 const url = 'http://localhost:3001/persons';
 
-async function getPersons() {
-  const res = await axios.get(url);
-  return res.data;
+function getPersons() {
+  const res = axios.get(url);
+  return res.then(res => res.data);
 }
 
-async function addPerson(newPerson) {
-  const res = await axios.post(url, newPerson);
-  return res.data;
+function addPerson(newPerson) {
+  const res = axios.post(url, newPerson);
+  return res.then(res => res.data);
 }
 
-async function deletePerson(id) {
-  const res = await axios.delete(`http://localhost:3001/persons/${id}`);
-  return res.data;
+function deletePerson(id) {
+  const res = axios.delete(`http://localhost:3001/persons/${id}`);
+  return res.then(res => res.data);
 }
 
-async function updatePerson(id, newPerson) {
-  const res = await axios.put(`http://localhost:3001/persons/${id}`, newPerson);
-  return res.data;
+function updatePerson(id, newPerson) {
+  const res = axios.put(`http://localhost:3001/persons/${id}`, newPerson);
+  return res.then(res => res.data);
 }
 
 export default { getPersons, addPerson, deletePerson, updatePerson };

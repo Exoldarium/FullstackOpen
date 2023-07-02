@@ -24,15 +24,13 @@ const App = () => {
 
   // get all the persons from db
   useEffect(() => {
-    (async () => {
-      const data = await personsService
-        .getPersons()
-        .catch(error => {
-          console.log(error);
-          setErrorMessage(error.response.data.error);
-        });
-      setPersons(data);
-    })();
+    personsService
+      .getPersons()
+      .then(res => setPersons(res))
+      .catch(error => {
+        console.log(error);
+        setErrorMessage(error.response.data.error);
+      });
   }, []);
 
   // dynamically grab user input and parse to int if input is number
@@ -45,7 +43,7 @@ const App = () => {
   }
 
   // post a new person to db
-  async function addNewPerson(e) {
+  function addNewPerson(e) {
     e.preventDefault();
     const findPerson = personsCopy.find(person => person.name === newName.name);
     const replaceDetails = { ...findPerson, name: newName.name, number: Number(newName.number) };
@@ -54,13 +52,13 @@ const App = () => {
       if (window.confirm(`${newName.name} is already in the phonebook, replace the old number with new one?`)) {
         // filter the person that we are updating
         const filterPerson = personsCopy.filter(person => person.id !== findPerson.id);
-        const updatePerson = await personsService
+        personsService
           .updatePerson(findPerson.id, replaceDetails)
+          .then(res => setPersons(filterPerson.concat(res)))
           .catch(error => {
             console.log(error);
             setErrorMessage(error.response.data.error);
           });
-        setPersons(filterPerson.concat(updatePerson));
         setNewName({
           name: '',
           number: '',
@@ -69,9 +67,6 @@ const App = () => {
       return;
     }
 
-    // add a new person
-    // const convertToNumber = { ...newName, number: Number(newName.number) };
-    // console.log(convertToNumber);
     personsService
       .addPerson(newName)
       .then(res => {

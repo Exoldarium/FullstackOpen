@@ -2,25 +2,25 @@ import axios from "axios";
 
 const url = 'api/persons';
 
-async function getPersons() {
-  const res = await axios.get(url);
-  return res.data;
+function getPersons() {
+  const res = axios.get(url);
+  return res.then(res => res.data);
 }
 
-async function addPerson(newPerson) {
+function addPerson(newPerson) {
   console.log(newPerson);
-  const res = await axios.post(url, newPerson);
-  return res.data;
+  const res = axios.post(url, newPerson);
+  return res.then(res => res.data);
 }
 
-async function deletePerson(id) {
-  const res = await axios.delete(`${url}/${id}`);
-  return res.data;
+function deletePerson(id) {
+  const res = axios.delete(`${url}/${id}`);
+  return res.then(res => res.data);
 }
 
-async function updatePerson(id, newPerson) {
-  const res = await axios.put(`${url}/${id}`, newPerson);
-  return res.data;
+function updatePerson(id, newPerson) {
+  const res = axios.put(`${url}/${id}`, newPerson);
+  return res.then(res => res.data);
 }
 
 export default { getPersons, addPerson, deletePerson, updatePerson };

@@ -1,0 +1,10 @@
+PUT http://localhost:3001/api/blogs/64a1133b32f672ae9e203c58
+Content-Type: application/json
+
+{
+  "title": "Cat post",
+  "author": "Cat",
+  "url": "testinourl.com",
+  "likes": 100,
+  "blogs": 5
+}
