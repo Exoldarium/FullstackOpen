@@ -6,7 +6,7 @@ blogRouter.get('/', async (req, res) => {
   res.json(blog);
 });
 
-blogRouter.post('/', async (req, res) => {
+blogRouter.post('/', async (req, res, next) => {
   const body = req.body;
 
   const newBlog = new Blog({
@@ -17,9 +17,13 @@ blogRouter.post('/', async (req, res) => {
     blogs: body.blogs
   });
 
-  const blogRes = await newBlog.save();
+  try {
+    const blogRes = await newBlog.save();
+    res.status(201).json(blogRes);
+  } catch (err) {
+    next(err);
+  }
 
-  res.status(201).json(blogRes);
 });
 
 blogRouter.get('/:id', async (req, res) => {
@@ -32,16 +36,20 @@ blogRouter.get('/:id', async (req, res) => {
   }
 });
 
-blogRouter.put('/:id', async (req, res) => {
+blogRouter.put('/:id', async (req, res, next) => {
   const { likes } = req.body;
 
-  const updatedBlog = await Blog.findByIdAndUpdate(
-    req.params.id,
-    { likes: likes },
-    { new: true, runValidators: true, context: 'query' }
-  );
+  try {
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      req.params.id,
+      { likes: likes },
+      { new: true, runValidators: true, context: 'query' }
+    );
 
-  res.json(updatedBlog);
+    res.json(updatedBlog);
+  } catch (err) {
+    next(err);
+  }
 });
 
 blogRouter.delete('/:id', async (req, res) => {
