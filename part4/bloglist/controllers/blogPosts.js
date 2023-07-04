@@ -21,7 +21,6 @@ blogRouter.post('/', async (req, res, next) => {
     user: user.id
   });
 
-  console.log(user.blogs);
   try {
     const blogRes = await newBlog.save();
 
