@@ -3,8 +3,9 @@ Content-Type: application/json
 
 {
   "title": "Cat post",
-  "author": "Cat",
-  "url": "testinourl.com",
-  "likes": 3,
-  "blogs": 5
+  "author": "Dusanooo",
+  "url": "catsarecool.com",
+  "likes": 20,
+  "blogs": 15,
+  "userId": "64a2b64859710ab167b6b255"
 }

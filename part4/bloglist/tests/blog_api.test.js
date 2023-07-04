@@ -42,10 +42,51 @@ describe('creation of new users', () => {
       .expect('Content-type', /application\/json/);
 
     const usersAtEnd = await helper.usersInDb();
-    // const userName = usersAtEnd.map(user => user.username);
-    console.log(usersAtEnd);
+    const userName = usersAtEnd.map(user => user.username);
+
     expect(usersAtEnd).toHaveLength(usersAtStart.length + 1);
-    // expect(userName).toContain(newUser.username);
+    expect(userName).toContain(newUser.username);
+  });
+
+  test('creation fails if the username is invalid', async () => {
+    const newUser = {
+      username: 'Dusanooo',
+      name: 'Dusan M',
+      password: ''
+    }
+
+    await api
+      .post('/api/user')
+      .send(newUser)
+      .expect(400);
+  });
+
+  test('creation fails if the password is invalid', async () => {
+    const newUser = {
+      username: '',
+      name: 'Dusan M',
+      password: 'secret'
+    }
+
+    await api
+      .post('/api/user')
+      .send(newUser)
+      .expect(400);
+  });
+
+  test('creation fails if the username is already taken', async () => {
+    const usersAtStart = await helper.usersInDb();
+    const userInDb = usersAtStart[0];
+    const newUser = {
+      username: userInDb.username,
+      name: 'Dusan M',
+      password: 'secret'
+    }
+
+    await api
+      .post('/api/user')
+      .send(newUser)
+      .expect(400);
   });
 });
 
