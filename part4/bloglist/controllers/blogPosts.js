@@ -1,16 +1,15 @@
 const blogRouter = require('express').Router();
 const Blog = require('../models/blog');
-const User = require('../models/user');
+const middleware = require('../utils/middleware');
 
 blogRouter.get('/', async (req, res) => {
   const blog = await Blog.find({}).populate('user', { username: 1, name: 1 });
   res.json(blog);
 });
 
-blogRouter.post('/', async (req, res, next) => {
+blogRouter.post('/', middleware.getUser, async (req, res, next) => {
   const body = req.body;
-
-  const user = await User.findById(body.userId);
+  const user = req.user;
 
   const newBlog = new Blog({
     title: body.title,
@@ -50,9 +49,19 @@ blogRouter.put('/:id', async (req, res, next) => {
   }
 });
 
-blogRouter.delete('/:id', async (req, res) => {
-  await Blog.findByIdAndRemove(req.params.id);
-  res.status(204).end();
+blogRouter.delete('/:id', middleware.getUser, async (req, res) => {
+  const user = req.user;
+  const blog = await Blog.findById(req.params.id);
+
+  // blog.user and user._id are objects so convert them to strings in order to compare them
+  if (blog.user.toString() !== user._id.toString()) {
+    return res.status(400).json({ error: 'you can only delete blogs you created' });
+  } else {
+    await blog.deleteOne();
+    res.status(204).end();
+  }
+
+  console.log(user, blog);
 });
 
 module.exports = blogRouter;
