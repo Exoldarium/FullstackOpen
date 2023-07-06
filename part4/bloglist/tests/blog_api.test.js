@@ -3,8 +3,6 @@ const supertest = require('supertest');
 const helper = require('./test.helper');
 const app = require('../app');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const config = require('../utils/config');
 
 const api = supertest(app);
 const Blog = require('../models/blog');
