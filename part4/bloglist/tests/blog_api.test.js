@@ -3,6 +3,8 @@ const supertest = require('supertest');
 const helper = require('./test.helper');
 const app = require('../app');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const config = require('../utils/config');
 
 const api = supertest(app);
 const Blog = require('../models/blog');
@@ -100,24 +102,42 @@ describe('there are blogs saved in the db', () => {
 
   test('unique identifier property of the blog posts is named id', async () => {
     const blogsAtStart = await helper.blogsInDb();
+    console.log(blogsAtStart);
     const blogToView = blogsAtStart[0];
 
     expect(blogToView.id).toBeDefined();
   });
 });
 
-describe('adding new blogs', () => {
+describe('creation and validation', () => {
+  beforeEach(async () => {
+    const user = await User.findOne({ username: 'root' });
+    const token = await helper.fakeToken();
+
+    await api
+      .post('/api/login')
+      .send({
+        token,
+        username: user.username,
+        name: user.name
+      })
+  });
   test('making an HTTP POST request successfully creates a new blog post', async () => {
+    const user = await User.findOne({ username: 'root' });
+    const token = await helper.fakeToken();
+
     const newBlog = {
       "title": "test",
       "author": "Me",
       "url": "testurl.com",
       "likes": 5,
-      "blogs": 3
+      "blogs": 3,
+      "id": user._id.toJSON()
     }
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-type', /application\/json/);
@@ -128,19 +148,22 @@ describe('adding new blogs', () => {
     expect(blogsAtEnd).toHaveLength(helper.mockData.length + 1);
     expect(blogPost).toContain('test');
   });
-});
 
-describe('validation of blog properties', () => {
   test('likes property is missing from the request', async () => {
+    const user = await User.findOne({ username: 'root' });
+    const token = await helper.fakeToken();
+
     const newBlog = {
       "title": "test",
       "author": "Me",
       "url": "testurl.com",
-      "blogs": 3
+      "blogs": 3,
+      "id": user._id.toJSON()
     }
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-type', /application\/json/);
@@ -151,39 +174,73 @@ describe('validation of blog properties', () => {
   });
 
   test('title property is missing from the request data', async () => {
+    const user = await User.findOne({ username: 'root' });
+    const token = await helper.fakeToken();
+
     const newBlog = {
       "author": "Me",
       "url": "testurl.com",
-      "blogs": 3
+      "blogs": 3,
+      "id": user._id.toJSON()
     }
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(400);
   });
 
   test('url property is missing from the request data', async () => {
+    const user = await User.findOne({ username: 'root' });
+    const token = await helper.fakeToken();
+
     const newBlog = {
       "title": "test",
       "author": "Me",
-      "blogs": 3
+      "blogs": 3,
+      "id": user._id.toJSON()
     }
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(400);
   });
 });
 
-describe('blogs are succesfully deleted', () => {
-  test('blog post is successfully deleted', async () => {
-    const blogsAtStart = await helper.blogsInDb();
-    const blogToDelete = blogsAtStart[0];
+describe('deletion of blogs', () => {
+  beforeEach(async () => {
+    const user = await User.findOne({ username: 'root' });
+    const token = await helper.fakeToken();
+
+    const newBlog = {
+      "title": "test",
+      "author": "Me",
+      "url": "testurl.com",
+      "likes": 5,
+      "blogs": 3,
+      "id": "12345",
+      "user": {
+        "id": user._id.toJSON()
+      }
+    }
 
     await api
-      .delete(`/api/blogs/${blogToDelete.id}`)
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
+      .send(newBlog)
+  });
+  test('blog post is successfully deleted', async () => {
+    const blogsAtStart = await helper.blogsInDb();
+    const token = await helper.fakeToken();
+
+    const res = await api.get('/api/blogs');
+
+    await api
+      .delete(`/api/blogs/${res.body[3].id}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(204);
 
     const blogsAtEnd = await helper.blogsInDb();

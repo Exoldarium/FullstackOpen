@@ -60,8 +60,6 @@ blogRouter.delete('/:id', middleware.getUser, async (req, res) => {
     await blog.deleteOne();
     res.status(204).end();
   }
-
-  console.log(user, blog);
 });
 
 module.exports = blogRouter;
