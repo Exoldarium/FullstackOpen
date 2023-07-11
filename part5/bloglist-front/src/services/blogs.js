@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = '/api/blogs';
+const baseUrl = 'api/blogs';
 let token = null;
 
 const setToken = (newToken) => {
@@ -30,7 +30,6 @@ const deleteBlog = async (id) => {
   return res.data;
 }
 
-// eslint-disable-next-line import/no-anonymous-default-export
 export default {
   setToken,
   getAll,
