@@ -1,16 +1,16 @@
-export default function AddNewBlog({ newBlog, addNewBlog }) {
+export default function AddNewBlog({ input, getUserInput, addNewBlogOnSubmit }) {
   return (
     <>
       <h1>Create New</h1>
-      <form className="addNewBlogForm">
-        <label htmlFor="Title">Title:</label>
-        <input type="text" name="Title" value={newBlog.title} />
-        <label htmlFor="Author">Author:</label>
-        <input type="text" name="Author" value={newBlog.author} />
-        <label htmlFor="Url">Url:</label>
-        <input type="text" name="Url" value={newBlog.url} />
+      <form className="addNewBlogForm" onSubmit={addNewBlogOnSubmit}>
+        <label htmlFor="title">Title:</label>
+        <input type="text" name="title" value={input.title} onChange={getUserInput} />
+        <label htmlFor="author">Author:</label>
+        <input type="text" name="author" value={input.author} onChange={getUserInput} />
+        <label htmlFor="url">Url:</label>
+        <input type="text" name="url" value={input.url} onChange={getUserInput} />
+        <button type="submit">add</button>
       </form>
-      <button onClick={addNewBlog}>Create</button>
     </>
   )
 }

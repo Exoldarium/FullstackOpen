@@ -1,14 +1,13 @@
 import './index.css'
 import { useState, useEffect } from 'react';
 import Blog from './components/Blog';
-import Notification from './components/Notification';
+import NotificationMessage from './components/NotificationMessage';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import AddNewBlog from './components/AddNewBlog';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState('');
@@ -16,11 +15,16 @@ const App = () => {
     title: '',
     author: '',
     url: ''
-  })
+  });
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
+  console.log(blogs);
+  const blogCopy = [...blogs];
   const blog = blogs.map(blog => <Blog key={blog.id} blog={blog} />);
-  const notification = <Notification message={errorMessage} />
-  const addNewBlog = <AddNewBlog input={newBlog} addNewBlog={addNewBlogOnClick} />;
+  const addNewBlog = <AddNewBlog input={newBlog} getUserInput={getUserInput} addNewBlogOnSubmit={addNewBlogOnSubmit} />;
+  const notificationMessage =
+    errorMessage ? <NotificationMessage error={errorMessage} /> : <NotificationMessage success={successMessage} />;
 
   useEffect(() => {
     (async () => {
@@ -39,7 +43,7 @@ const App = () => {
     }
   }, []);
 
-  const handleLogin = async (e) => {
+  async function handleLogin(e) {
     e.preventDefault();
     try {
       // we send a post request to api/login and get back our user details
@@ -58,18 +62,40 @@ const App = () => {
     }
   }
 
-  const handleLogout = () => {
+  function handleLogout() {
     window.localStorage.clear();
     setUser('');
   }
 
-  const addNewBlogOnClick = (e) => {
-    e.preventDefault();
+  function getUserInput(e) {
     const { name, value } = e.target;
     setNewBlog({
       ...newBlog,
       [name]: value,
     });
+  }
+
+  async function addNewBlogOnSubmit(e) {
+    e.preventDefault();
+    console.log(e.target)
+    try {
+      const res = await blogService.addBlog(newBlog);
+      const newBloglist = blogCopy.concat(res);
+      setBlogs(newBloglist);
+      setNewBlog({
+        title: '',
+        author: '',
+        url: ''
+      });
+      setTimeout(() => {
+        setSuccessMessage(`a new blog ${res.title} by ${res.author} added`);
+      }, 5000);
+    } catch (exception) {
+      setErrorMessage('error bad request');
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    }
   }
 
   const loginForm = (
@@ -106,10 +132,10 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      {notification}
+      {notificationMessage}
       {user ? userInfo : loginForm}
-      {user ? blog : ''}
-      {addNewBlog}
+      {user && blog}
+      {user && addNewBlog}
     </div>
   )
 }
