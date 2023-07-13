@@ -34,12 +34,19 @@ blogRouter.post('/', middleware.getUser, async (req, res, next) => {
 });
 
 blogRouter.put('/:id', async (req, res, next) => {
-  const { likes } = req.body;
+  const { likes, author, title, url } = req.body;
+  const user = req.user;
 
   try {
     const updatedBlog = await Blog.findByIdAndUpdate(
       req.params.id,
-      { likes: likes },
+      {
+        likes,
+        author,
+        title,
+        url,
+        user
+      },
       { new: true, runValidators: true, context: 'query' }
     );
 
