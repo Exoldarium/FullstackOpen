@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from 'react';
 
 export default function Blog({ blog, addNewLike, deleteSelectedBlog, user }) {
   const [descriptive, setDescriptive] = useState(false);
