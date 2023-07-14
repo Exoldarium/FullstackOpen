@@ -1,10 +1,13 @@
 import { useState } from "react"
 
-export default function Blog({ blog, addNewLike, deleteSelectedBlog }) {
+export default function Blog({ blog, addNewLike, deleteSelectedBlog, user }) {
   const [descriptive, setDescriptive] = useState(false);
 
   const expandedView = { height: 'fit-content' }
   const hiddenView = { height: '5vh' }
+
+  // check if the logged user is the same as the blog creator
+  const loggedUserBlog = blog.user.id === user.id || blog.user === user.id;
 
   function expandView() {
     setDescriptive(!descriptive);
@@ -34,7 +37,8 @@ export default function Blog({ blog, addNewLike, deleteSelectedBlog }) {
         likes {blog.likes}
         <button onClick={addLike} id={blog.id}>like</button>
       </p>
-      <button style={{ width: 'fit-content' }} onClick={deleteBlog}>remove</button>
+      {/* the user can only delete the blogs he created */}
+      {loggedUserBlog && <button style={{ width: 'fit-content' }} onClick={deleteBlog}>remove</button>}
     </div >
   )
 }

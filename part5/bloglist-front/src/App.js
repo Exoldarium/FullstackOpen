@@ -103,7 +103,8 @@ const App = () => {
 
   function deleteSelectedBlog({ blog }) {
     blogService.deleteBlog(blog.id);
-    setBlogs(blogs);
+    const newBlogList = blogCopy.filter(blogList => blogList.id !== blog.id);
+    setBlogs(newBlogList);
   }
 
   function sortBlogs() {
@@ -132,7 +133,7 @@ const App = () => {
           />
         </Toggleable>
       }
-      <button onClick={sortBlogs}>sort</button>
+      {user && <button onClick={sortBlogs}>sort</button>}
       {user &&
         blogCopy.map(
           (blog, i) =>
@@ -141,6 +142,7 @@ const App = () => {
               blog={blog}
               addNewLike={addNewLike}
               deleteSelectedBlog={deleteSelectedBlog}
+              user={user}
             />
         )
       }
