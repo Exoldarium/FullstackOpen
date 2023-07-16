@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useState } from "react";
+import { forwardRef, useImperativeHandle, useState } from 'react';
 
 // Call forwardRef() to let your component receive a ref and forward it to a child component
 // This way the component can access the ref that is assigned to it
@@ -24,7 +24,7 @@ export default forwardRef(function Togglable(props, refs) {
   return (
     <div>
       <div style={hideWhenVisible}>
-        <button onClick={toggleVisible}>new note</button>
+        <button onClick={toggleVisible} data-cy="newNoteButton">new note</button>
       </div>
       <div style={showWhenVisible}>
         {props.children}

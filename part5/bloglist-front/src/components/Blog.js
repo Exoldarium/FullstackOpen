@@ -26,19 +26,40 @@ export default function Blog({ blog, addNewLike, deleteSelectedBlog, user }) {
   }
 
   return (
-    <div className="blogDiv" style={descriptive ? expandedView : hiddenView}>
-      <p>
+    <div
+      className="blogDiv"
+      style={descriptive ? expandedView : hiddenView}
+    >
+      <p data-cy="blogTitle">
         {blog.title}
-        <button onClick={expandView} className="expandBlog">{descriptive ? 'hide' : 'show'}</button>
+        <button onClick={expandView} className="expandBlog">
+          {descriptive ? 'hide' : 'show'}
+        </button>
       </p>
       <p>{blog.author}</p>
       <p>{blog.url}</p>
       <p>
         likes {blog.likes}
-        <button onClick={addLike} id={blog.id} className="likeButton">like</button>
+        <button
+          onClick={addLike}
+          id={blog.id}
+          className="likeButton"
+          data-cy="likeButton"
+        >
+          like
+        </button>
       </p>
       {/* the user can only delete the blogs he created */}
-      {loggedUserBlog && <button style={{ width: 'fit-content' }} onClick={deleteBlog}>remove</button>}
+      {loggedUserBlog &&
+        <button
+          style={{ width: 'fit-content' }}
+          onClick={deleteBlog}
+          id={blog.user.id || blog.user}
+          data-cy="removeButton"
+        >
+          remove
+        </button>
+      }
     </div >
   )
 }

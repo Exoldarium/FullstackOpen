@@ -24,6 +24,7 @@ export default function LoginForm({ handleLogin }) {
           value={username}
           name="Username"
           onChange={(e) => setUsername(e.target.value)}
+          data-cy="username"
         />
       </div>
       <div>
@@ -33,9 +34,10 @@ export default function LoginForm({ handleLogin }) {
           value={password}
           name="Password"
           onChange={(e) => setPassword(e.target.value)}
+          data-cy="password"
         />
       </div>
-      <button type="submit">login</button>
+      <button type="submit" data-cy="loginButton">login</button>
     </form>
   )
 }

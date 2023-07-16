@@ -10,6 +10,12 @@ const loginRouter = require('./controllers/login');
 const middleware = require('./utils/middleware');
 const logger = require('./utils/logger');
 
+// only acces during testing
+if (process.env.NODE_ENV === 'test') {
+  const testingRouter = require('./controllers/testing');
+  app.use('/api/testing', testingRouter);
+}
+
 // if set to false it means that we can pass any fields to our query
 mongoose.set('strictQuery', false);
 
