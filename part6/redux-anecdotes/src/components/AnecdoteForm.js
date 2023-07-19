@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux/es";
 import { createAnecdote } from "../reducers/anecdoteReducer";
 
-export default function CreateAnecdote() {
+export default function AnecdoteForm() {
   const dispatch = useDispatch();
 
   function addAnecdote(e) {
