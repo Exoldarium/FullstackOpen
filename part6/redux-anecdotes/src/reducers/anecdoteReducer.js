@@ -32,9 +32,10 @@ export default function reducer(state = initialState, action) {
       const { id } = action.payload;
       const anecdote = state.find(anecdote => anecdote.id === id)
       anecdote.votes += 1;
+
       const newState = state.map(anecdotes => anecdotes.id !== id ? anecdotes : anecdote)
-      newState.sort((first, second) => first.votes - second.votes);
-      return newState.sort((first, second) => second.votes - first.votes);
+      const sorted = newState.sort((first, second) => second.votes - first.votes);
+      return sorted
     default:
       return state
   }
