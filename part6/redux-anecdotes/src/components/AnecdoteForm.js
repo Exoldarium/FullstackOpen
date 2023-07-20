@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux/es";
 import { createAnecdote } from "../reducers/anecdoteReducer";
+import { voteMessage } from "../reducers/messageReducer";
 
 export default function AnecdoteForm() {
   const dispatch = useDispatch();
@@ -9,7 +10,11 @@ export default function AnecdoteForm() {
     const { value } = e.target.anecdote;
     e.target.anecdote.value = '';
     dispatch(createAnecdote(value));
+    dispatch(voteMessage({
+      content: value
+    }));
   }
+
   return (
     <>
       <h2>create new</h2>
