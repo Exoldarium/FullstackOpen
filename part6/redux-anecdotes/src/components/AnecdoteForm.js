@@ -1,15 +1,19 @@
 import { useDispatch } from "react-redux/es";
 import { createAnecdote } from "../reducers/anecdoteReducer";
 import { voteMessage } from "../reducers/messageReducer";
+import anecdoteService from "../services/anecdotes";
 
 export default function AnecdoteForm() {
   const dispatch = useDispatch();
 
-  function addAnecdote(e) {
+  async function addAnecdote(e) {
     e.preventDefault();
     const { value } = e.target.anecdote;
     e.target.anecdote.value = '';
-    dispatch(createAnecdote(value));
+
+    const res = await anecdoteService.createNew(value);
+
+    dispatch(createAnecdote(res));
     dispatch(voteMessage({
       content: value
     }));
