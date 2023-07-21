@@ -10,10 +10,18 @@ async function getAll() {
 async function createNew(content) {
   const newAnecdote = {
     content,
-    vote: 0
+    votes: 0
   }
   const res = await axios.post(baseUrl, newAnecdote);
   return res.data;
 }
 
-export default { getAll, createNew }
+async function updateExisting(id, content) {
+  const res = await axios.put(`${baseUrl}/${id}`, content);
+  return res.data;
+}
+
+const anecdoteService = {
+  getAll, createNew, updateExisting
+}
+export default anecdoteService

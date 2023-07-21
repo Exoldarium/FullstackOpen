@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux/es";
-import { voteAnecdote } from "../reducers/anecdoteReducer";
+import { updateAnecdotes } from "../reducers/anecdoteReducer";
 import { voteMessage } from "../reducers/messageReducer";
 
 export default function AnecdoteList() {
@@ -18,7 +18,7 @@ export default function AnecdoteList() {
   });
 
   function sendId(anecdote) {
-    dispatch(voteAnecdote(anecdote.id));
+    dispatch(updateAnecdotes(anecdote))
     dispatch(voteMessage({
       id: anecdote.id
     }));

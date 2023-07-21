@@ -2,20 +2,16 @@ import AnecdoteList from './components/AnecdoteList';
 import AnecdoteForm from './components/AnecdoteForm';
 import Filter from './components/Filter';
 import Notification from './components/Notification';
-import anecdoteService from './services/anecdotes';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { setAnecdote } from './reducers/anecdoteReducer';
+import { initializeAnecdotes } from './reducers/anecdoteReducer';
 
 export default function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    (async () => {
-      const res = await anecdoteService.getAll();
-      // we send our anecdotes from the server to our reducer
-      return dispatch(setAnecdote(res))
-    })();
+    // we send our anecdotes from the server to our reducer
+    dispatch(initializeAnecdotes())
   }, [dispatch]);
 
   return (
