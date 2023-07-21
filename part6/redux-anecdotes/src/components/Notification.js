@@ -6,14 +6,17 @@ export default function Notification() {
       const anecdote = anecdotes.find(anecdote => anecdote.id === message.id);
       return `voted for ${anecdote.content}`
     }
-    // const anecdote = await anecdotes.find(anecdote => anecdote.content === message.content) || '';
-    // return `added ${anecdote.content}`
+
+    const anecdote = anecdotes.find(anecdote => anecdote.content === message.content);
+    if (anecdote === undefined) {
+      return ''
+    } else {
+      const content = anecdote.content;
+      return `added ${content}`
+    }
   });
 
-  console.log(notification)
-
   const style = {
-    border: 'solid',
     padding: 10,
     borderWidth: 1
   }

@@ -5,7 +5,8 @@ const messageSlice = createSlice({
   initialState: 'MESSAGE',
   reducers: {
     voteMessage(state, action) {
-      return action.payload
+      const payload = action.payload;
+      return payload
     },
   }
 });
