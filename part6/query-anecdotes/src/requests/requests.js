@@ -8,8 +8,13 @@ export async function getAll() {
 }
 
 export async function createNew(content) {
-  const res = await axios.post(baseUrl, content);
-  return res.data;
+  if (content.content.length < 5) throw Error('anecdote should have more than 5 characters')
+  try {
+    const res = await axios.post(baseUrl, content);
+    return res.data;
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 export async function updateExisting(content) {
