@@ -108,7 +108,6 @@ const CreateNew = (props) => {
       <button onClick={clearForm}>clear</button>
     </div>
   )
-
 }
 
 const App = () => {
