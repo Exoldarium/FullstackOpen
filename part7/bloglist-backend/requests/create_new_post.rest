@@ -1,0 +1,13 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkR1c2FuIiwiaWQiOiI2NGEyYjY0ODU5NzEwYWIxNjdiNmIyNTUiLCJpYXQiOjE2OTAzNzExODMsImV4cCI6MTY5MDM3NDc4M30.geVjlKVRM0xD-rrsgFF5g63uKIdUL9NqtVEkxuHzCxg
+
+
+{
+  "title": "Super cool post",
+  "author": "Dusan and Tarn",
+  "url": "itssupercoooool.com",
+  "likes": 20,
+  "blogs": 25,
+  "userId": "64a2b64859710ab167b6b255"
+}

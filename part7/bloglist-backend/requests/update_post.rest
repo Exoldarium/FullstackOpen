@@ -1,0 +1,12 @@
+PUT http://localhost:3003/api/blogs/64a1133b32f672ae9e203c58
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkR1c2FuIiwiaWQiOiI2NGEyYjY0ODU5NzEwYWIxNjdiNmIyNTUiLCJpYXQiOjE2ODg1NDY4MDQsImV4cCI6MTY4ODU1MDQwNH0.3xZkKn2CvF4dCeF2dFJKqx6LiqSCXvNlPlqBzDTFcfE
+
+{
+  "title": "Cat post",
+  "author": "Cat",
+  "url": "testinourl.com",
+  "likes": 100,
+  "blogs": 5,
+  "userId": "64a2b64859710ab167b6b255"
+}
