@@ -1,30 +1,16 @@
-import { useState } from 'react';
-import PropTypes from 'prop-types';
+import useForm from '../utils/useForm';
 
 export default function AddNewBlog({ addNewBlog }) {
-  const [newBlog, setNewBlog] = useState({
+  const [inputs, formService] = useForm({
     title: '',
     author: '',
     url: '',
   });
 
-  function getUserInput(e) {
-    const { name, value } = e.target;
-
-    setNewBlog({
-      ...newBlog,
-      [name]: value,
-    });
-  }
-
   function addNewBlogOnSubmit(e) {
     e.preventDefault();
-    addNewBlog(newBlog);
-    setNewBlog({
-      title: '',
-      author: '',
-      url: '',
-    });
+    addNewBlog(inputs);
+    formService.clearForm();
   }
 
   return (
@@ -35,7 +21,7 @@ export default function AddNewBlog({ addNewBlog }) {
         <input
           type="text"
           name="title"
-          onChange={getUserInput}
+          onChange={formService.getInputs}
           className="titleInput"
           data-cy="titleInput"
         />
@@ -43,7 +29,7 @@ export default function AddNewBlog({ addNewBlog }) {
         <input
           type="text"
           name="author"
-          onChange={getUserInput}
+          onChange={formService.getInputs}
           className="authorInput"
           data-cy="authorInput"
         />
@@ -51,7 +37,7 @@ export default function AddNewBlog({ addNewBlog }) {
         <input
           type="text"
           name="url"
-          onChange={getUserInput}
+          onChange={formService.getInputs}
           className="urlInput"
           data-cy="urlInput"
         />
@@ -62,7 +48,3 @@ export default function AddNewBlog({ addNewBlog }) {
     </>
   );
 }
-
-AddNewBlog.propTypes = {
-  addNewBlog: PropTypes.func.isRequired,
-};

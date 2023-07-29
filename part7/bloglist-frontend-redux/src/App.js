@@ -8,10 +8,17 @@ import UserInfo from './components/UserInfo';
 import Toggleable from './components/Toggleable';
 import useBlogService from './utils/useBlogService';
 import useUserService from './utils/useUserService';
+import { useAddBlogMutation, useBlogsQuery, useDeleteBlogMutation, useUpdateBlogMutation } from './services/blogService';
 
 const App = () => {
   const [blogs, blogService] = useBlogService();
-  const [user, loginService, setUser] = useUserService();
+  const [user, loginService] = useUserService();
+  const [addBlog] = useAddBlogMutation();
+  const [updateBlog] = useUpdateBlogMutation();
+  const [deleteBlog] = useDeleteBlogMutation();
+  const { data, isSuccess } = useBlogsQuery();
+
+  console.log(data, isSuccess)
 
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -22,30 +29,34 @@ const App = () => {
     const loggedUser = localStorage.getItem('loginCredentials');
     if (loggedUser) {
       const user = JSON.parse(loggedUser);
-      setUser(user);
+      loginService.setUser(user);
       blogService.setToken(user.token);
     }
   }, []);
 
-  function handleLogin({ username, password }) {
-    try {
-      loginService.login({ username, password });
-    } catch (exception) {
-      setErrorMessage('wrong credentials');
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
-    }
+  async function handleLogin({ username, password }) {
+    loginService.login({ username, password })
+
+    // if (res.response.data.error) {
+    //   setErrorMessage(`${res.response.data.error}`);
+    //   setTimeout(() => {
+    //     setErrorMessage(null);
+    //   }, 5000);
+    // }
   }
 
-  function addNewBlog(newBlog) {
+  async function addNewBlog(newBlog) {
     try {
       // we can change the visibility of our elements from outside of the component using href
       blogFormRef.current.toggleVisible();
       blogService.setToken(user.token);
-      blogService.addBlog(newBlog);
+      const body = {
+        newBlog,
+        token: user.token
+      }
+      addBlog(body);
 
-      // setSuccessMessage(`a new blog ${res.title} by ${res.author} added`);
+      setSuccessMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`);
       setTimeout(() => {
         setSuccessMessage(null);
       }, 5000);
@@ -57,7 +68,9 @@ const App = () => {
     }
   }
 
-  function addNewLike({ blog }) {
+  function addNewLike(blog) {
+    const id = blog.id;
+
     try {
       const newBlog = {
         user: blog.user.id,
@@ -66,8 +79,13 @@ const App = () => {
         title: blog.title,
         url: blog.url,
       };
-
-      blogService.updateBlog(blog.id, newBlog);
+      // blogService.updateBlog(blog.id, newBlog);
+      const body = {
+        newBlog,
+        id,
+        token: user.token
+      }
+      updateBlog(body)
       setSuccessMessage(`added a like for ${newBlog.title} by ${newBlog.author}`);
       setTimeout(() => {
         setSuccessMessage(null);
@@ -78,6 +96,14 @@ const App = () => {
         setErrorMessage(null);
       }, 5000);
     }
+  }
+
+  function handleDelete(blog) {
+    const body = {
+      id: blog.id,
+      token: user.token
+    }
+    deleteBlog(body);
   }
 
   return (
@@ -96,13 +122,14 @@ const App = () => {
         </Toggleable>
       )}
       {user && <button onClick={() => blogService.sortBlogs()}>sort</button>}
-      {user &&
-        blogs.map((blog, i) => (
+      {(user && isSuccess) &&
+        data.map((blog, i) => (
           <Blog
             key={i}
             blog={blog}
             addNewLike={addNewLike}
-            deleteSelectedBlog={({ blog }) => blogService.deleteBlog(blog.id)}
+            // deleteSelectedBlog={({ blog }) => blogService.deleteBlog(blog.id)}
+            deleteSelectedBlog={handleDelete}
             user={user}
           />
         ))}

@@ -3,14 +3,17 @@ import { useState } from 'react';
 
 const baseUrl = '/api/login';
 
-export default function useUserService(initialState = {}) {
-  const [userLogin, setUserLogin] = useState(initialState);
+export default function useUserService() {
   const [user, setUser] = useState('');
 
   async function login(credentials) {
-    const res = await axios.post(baseUrl, credentials);
-    window.localStorage.setItem('loginCredentials', JSON.stringify(res.data));
-    setUser(res.data);
+    try {
+      const res = await axios.post(baseUrl, credentials);
+      window.localStorage.setItem('loginCredentials', JSON.stringify(res.data));
+      setUser(res.data);
+    } catch (err) {
+      return err
+    }
   };
 
   function logout() {
@@ -20,12 +23,12 @@ export default function useUserService(initialState = {}) {
 
   const service = {
     login,
-    logout
+    logout,
+    setUser
   }
 
   return [
     user,
     service,
-    setUser
   ]
 }

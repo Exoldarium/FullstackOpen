@@ -14,18 +14,20 @@ export default function Blog({ blog, addNewLike, deleteSelectedBlog, user }) {
   }
 
   function addLike() {
-    blog.likes += 1;
-    addNewLike({ blog });
+    const newBlog = {
+      ...blog,
+      likes: blog.likes + 1
+    }
+    addNewLike(newBlog);
   }
 
-  function deleteBlog() {
-    console.log(blog);
+  function handleDeleteBlog() {
     if (
       window.confirm(
         `are you sure you want to delete ${blog.title} by ${blog.author}`,
       )
     ) {
-      deleteSelectedBlog({ blog });
+      deleteSelectedBlog(blog);
     }
   }
 
@@ -54,7 +56,7 @@ export default function Blog({ blog, addNewLike, deleteSelectedBlog, user }) {
       {loggedUserBlog && (
         <button
           style={{ width: 'fit-content' }}
-          onClick={deleteBlog}
+          onClick={handleDeleteBlog}
           id={blog.user.id || blog.user}
           data-cy="removeButton"
         >
