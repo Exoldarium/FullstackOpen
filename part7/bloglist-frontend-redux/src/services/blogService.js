@@ -5,7 +5,7 @@ export const blogApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'api'
   }),
-  tagTypes: ['Blogs'],
+  tagTypes: ['Blogs', 'User'],
   endpoints: (builder) => ({
     blogs: builder.query({
       query: () => 'blogs',
@@ -42,7 +42,15 @@ export const blogApi = createApi({
         }
       }),
       invalidatesTags: ['Blogs']
-    })
+    }),
+    userLogin: builder.mutation({
+      query: (credentials) => ({
+        url: 'login',
+        method: 'POST',
+        body: credentials
+      }),
+      invalidatesTags: ['User']
+    }),
   })
 });
 
@@ -52,5 +60,6 @@ export const {
   useBlogsQuery,
   useAddBlogMutation,
   useUpdateBlogMutation,
-  useDeleteBlogMutation
+  useDeleteBlogMutation,
+  useUserLoginMutation
 } = blogApi;

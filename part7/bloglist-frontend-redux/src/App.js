@@ -6,23 +6,28 @@ import AddNewBlog from './components/AddNewBlog';
 import LoginForm from './components/LoginForm';
 import UserInfo from './components/UserInfo';
 import Toggleable from './components/Toggleable';
-import useBlogService from './utils/useBlogService';
 import useUserService from './utils/useUserService';
-import { useAddBlogMutation, useBlogsQuery, useDeleteBlogMutation, useUpdateBlogMutation } from './services/blogService';
+import {
+  useAddBlogMutation,
+  useBlogsQuery,
+  useDeleteBlogMutation,
+  useUpdateBlogMutation,
+  useUserLoginMutation
+} from './services/blogService';
 
 const App = () => {
-  const [blogs, blogService] = useBlogService();
   const [user, loginService] = useUserService();
   const [addBlog] = useAddBlogMutation();
   const [updateBlog] = useUpdateBlogMutation();
   const [deleteBlog] = useDeleteBlogMutation();
+  const [userLogin] = useUserLoginMutation();
+  // TODO: set the blogs into a redux state
   const { data, isSuccess } = useBlogsQuery();
-
-  console.log(data, isSuccess)
 
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const blogFormRef = useRef();
+
 
   useEffect(() => {
     // we grab our user details from local storage so that user stays logged in
@@ -30,30 +35,25 @@ const App = () => {
     if (loggedUser) {
       const user = JSON.parse(loggedUser);
       loginService.setUser(user);
-      blogService.setToken(user.token);
     }
   }, []);
 
   async function handleLogin({ username, password }) {
-    loginService.login({ username, password })
-
-    // if (res.response.data.error) {
-    //   setErrorMessage(`${res.response.data.error}`);
-    //   setTimeout(() => {
-    //     setErrorMessage(null);
-    //   }, 5000);
-    // }
+    const res = await userLogin({ username, password });
+    loginService.setUser(res.data);
+    window.localStorage.setItem('loginCredentials', JSON.stringify(res.data));
   }
 
-  async function addNewBlog(newBlog) {
+  function addNewBlog(newBlog) {
     try {
       // we can change the visibility of our elements from outside of the component using href
       blogFormRef.current.toggleVisible();
-      blogService.setToken(user.token);
+
       const body = {
         newBlog,
         token: user.token
       }
+
       addBlog(body);
 
       setSuccessMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`);
@@ -78,14 +78,16 @@ const App = () => {
         author: blog.author,
         title: blog.title,
         url: blog.url,
-      };
-      // blogService.updateBlog(blog.id, newBlog);
+      }
+
       const body = {
         newBlog,
         id,
         token: user.token
       }
-      updateBlog(body)
+
+      updateBlog(body);
+
       setSuccessMessage(`added a like for ${newBlog.title} by ${newBlog.author}`);
       setTimeout(() => {
         setSuccessMessage(null);
@@ -103,7 +105,15 @@ const App = () => {
       id: blog.id,
       token: user.token
     }
+
     deleteBlog(body);
+  }
+
+  function sortBlogs() {
+    console.log(data)
+    data.sort(
+      (firstBlog, secondBlog) => secondBlog.likes - firstBlog.likes,
+    );
   }
 
   return (
@@ -121,14 +131,13 @@ const App = () => {
           <AddNewBlog addNewBlog={addNewBlog} />
         </Toggleable>
       )}
-      {user && <button onClick={() => blogService.sortBlogs()}>sort</button>}
+      {user && <button onClick={sortBlogs}>sort</button>}
       {(user && isSuccess) &&
         data.map((blog, i) => (
           <Blog
             key={i}
             blog={blog}
             addNewLike={addNewLike}
-            // deleteSelectedBlog={({ blog }) => blogService.deleteBlog(blog.id)}
             deleteSelectedBlog={handleDelete}
             user={user}
           />
