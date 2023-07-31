@@ -20,7 +20,7 @@ export const blogApi = createApi({
           Authorization: `Bearer ${token}`
         }
       }),
-      invalidatesTags: ['Blogs']
+      invalidatesTags: ['Blogs'],
     }),
     updateBlog: builder.mutation({
       query: ({ newBlog, id, token }) => ({

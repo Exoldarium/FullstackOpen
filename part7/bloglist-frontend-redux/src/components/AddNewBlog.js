@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import useForm from '../utils/useForm';
 
 export default function AddNewBlog({ addNewBlog }) {
@@ -6,9 +7,11 @@ export default function AddNewBlog({ addNewBlog }) {
     author: '',
     url: '',
   });
+  // const blogFormRef = useRef();
 
   function addNewBlogOnSubmit(e) {
     e.preventDefault();
+    // blogFormRef.current.toggleVisible();
     addNewBlog(inputs);
     formService.clearForm();
   }

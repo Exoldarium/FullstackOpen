@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-let token = null;
-
 export default function useBlogService() {
   const [blogs, setBlogs] = useState([]);
   const copy = [...blogs]

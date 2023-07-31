@@ -1,11 +1,24 @@
-export default function NotificationMessage({ error, success }) {
-  if (error === null || success === null) {
-    return;
-  }
-  if (error) {
-    return <div className="error">{error}</div>;
-  }
-  if (success) {
-    return <div className="success">{success}</div>;
+import { useSelector } from 'react-redux';
+
+export default function NotificationMessage() {
+  const notification = useSelector(({ message }) => {
+    if (message) {
+      return message
+    }
+  });
+
+  if (notification.type === undefined) {
+    return null
+  } else {
+    return (
+      <>
+        {notification.type === 'SUCCESS'
+          ?
+          <div className="success">{notification.content}</div>
+          :
+          <div className="error">{notification.content}</div>}
+      </>
+    )
   }
 }
+

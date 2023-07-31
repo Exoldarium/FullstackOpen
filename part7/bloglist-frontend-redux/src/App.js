@@ -14,6 +14,8 @@ import {
   useUpdateBlogMutation,
   useUserLoginMutation
 } from './services/blogService';
+import { useDispatch } from 'react-redux';
+import { setMessage } from './reducers/messageReducer';
 
 const App = () => {
   const [user, loginService] = useUserService();
@@ -23,11 +25,11 @@ const App = () => {
   const [userLogin] = useUserLoginMutation();
   // TODO: set the blogs into a redux state
   const { data, isSuccess } = useBlogsQuery();
+  const dispatch = useDispatch();
 
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const blogFormRef = useRef();
-
 
   useEffect(() => {
     // we grab our user details from local storage so that user stays logged in
@@ -56,15 +58,15 @@ const App = () => {
 
       addBlog(body);
 
-      setSuccessMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`);
-      setTimeout(() => {
-        setSuccessMessage(null);
-      }, 5000);
+      dispatch(setMessage({
+        content: `a new blog ${newBlog.title} by ${newBlog.author} added`,
+        type: 'SUCCESS'
+      }, 5));
     } catch (exception) {
-      setErrorMessage('error bad request');
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      dispatch(setMessage({
+        content: 'bad request',
+        type: 'ERROR'
+      }, 5));
     }
   }
 
@@ -88,15 +90,15 @@ const App = () => {
 
       updateBlog(body);
 
-      setSuccessMessage(`added a like for ${newBlog.title} by ${newBlog.author}`);
-      setTimeout(() => {
-        setSuccessMessage(null);
-      }, 5000);
+      dispatch(setMessage({
+        content: `added like for ${newBlog.title} by ${newBlog.author}`,
+        type: 'SUCCESS'
+      }, 5));
     } catch (exception) {
-      setErrorMessage('error bad request');
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      dispatch(setMessage({
+        content: 'bad request',
+        type: 'ERROR'
+      }, 5));
     }
   }
 
@@ -119,8 +121,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      {errorMessage && <NotificationMessage error={errorMessage} />}
-      {successMessage && <NotificationMessage success={successMessage} />}
+      <NotificationMessage />
       {user ? (
         <UserInfo handleLogout={() => loginService.logout()} user={user} />
       ) : (
