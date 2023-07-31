@@ -14,7 +14,7 @@ const messageSlice = createSlice({
   }
 });
 
-export const { setNotificationMessage, setSuccessMessage, setErrorMessage } = messageSlice.actions;
+export const { setNotificationMessage } = messageSlice.actions;
 
 export function setMessage(content, time) {
   return async (dispatch) => {
