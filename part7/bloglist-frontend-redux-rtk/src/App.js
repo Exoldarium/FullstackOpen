@@ -1,21 +1,32 @@
 import './index.css';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Blog from './components/Blog';
 import NotificationMessage from './components/NotificationMessage';
 import AddNewBlog from './components/AddNewBlog';
 import LoginForm from './components/LoginForm';
 import UserInfo from './components/UserInfo';
 import Toggleable from './components/Toggleable';
-import useBlogService from './utils/useBlogService';
 import useUserService from './utils/useUserService';
-import { setMessage } from './reducers/messageReducer';
+import {
+  useAddBlogMutation,
+  useBlogsQuery,
+  useDeleteBlogMutation,
+  useUpdateBlogMutation,
+  useUserLoginMutation
+} from './services/blogService';
 import { useDispatch } from 'react-redux';
+import { setMessage } from './reducers/messageReducer';
 
 const App = () => {
-  const [blogs, blogService] = useBlogService();
   const [user, loginService] = useUserService();
+  const [addBlog] = useAddBlogMutation();
+  const [updateBlog] = useUpdateBlogMutation();
+  const [deleteBlog] = useDeleteBlogMutation();
+  const [userLogin] = useUserLoginMutation();
+  // TODO: set the blogs into a redux state
+  const { data, isSuccess } = useBlogsQuery();
+  const dispatch = useDispatch();
   const blogFormRef = useRef();
-  const dispatch = useDispatch()
 
   useEffect(() => {
     // we grab our user details from local storage so that user stays logged in
@@ -23,20 +34,26 @@ const App = () => {
     if (loggedUser) {
       const user = JSON.parse(loggedUser);
       loginService.setUser(user);
-      blogService.setToken(user.token);
     }
   }, []);
 
-  function handleLogin({ username, password }) {
-    loginService.login({ username, password })
+  async function handleLogin({ username, password }) {
+    const res = await userLogin({ username, password });
+    loginService.setUser(res.data);
+    window.localStorage.setItem('loginCredentials', JSON.stringify(res.data));
   }
 
-  async function addNewBlog(newBlog) {
+  function addNewBlog(newBlog) {
     try {
       // we can change the visibility of our elements from outside of the component using href
       blogFormRef.current.toggleVisible();
-      blogService.setToken(user.token);
-      blogService.addBlog(newBlog);
+
+      const body = {
+        newBlog,
+        token: user.token
+      }
+
+      addBlog(body);
 
       dispatch(setMessage({
         content: `a new blog ${newBlog.title} by ${newBlog.author} added`,
@@ -50,7 +67,9 @@ const App = () => {
     }
   }
 
-  function addNewLike({ blog }) {
+  function addNewLike(blog) {
+    const id = blog.id;
+
     try {
       const newBlog = {
         user: blog.user.id,
@@ -60,7 +79,13 @@ const App = () => {
         url: blog.url,
       }
 
-      blogService.updateBlog(blog.id, newBlog);
+      const body = {
+        newBlog,
+        id,
+        token: user.token
+      }
+
+      updateBlog(body);
 
       dispatch(setMessage({
         content: `added like for ${newBlog.title} by ${newBlog.author}`,
@@ -72,6 +97,22 @@ const App = () => {
         type: 'ERROR'
       }, 5));
     }
+  }
+
+  function handleDelete(blog) {
+    const body = {
+      id: blog.id,
+      token: user.token
+    }
+
+    deleteBlog(body);
+  }
+
+  function sortBlogs() {
+    console.log(data)
+    data.sort(
+      (firstBlog, secondBlog) => secondBlog.likes - firstBlog.likes,
+    );
   }
 
   return (
@@ -88,14 +129,14 @@ const App = () => {
           <AddNewBlog addNewBlog={addNewBlog} />
         </Toggleable>
       )}
-      {user && <button onClick={() => blogService.sortBlogs()}>sort</button>}
-      {user &&
-        blogs.map((blog, i) => (
+      {user && <button onClick={sortBlogs}>sort</button>}
+      {(user && isSuccess) &&
+        data.map((blog, i) => (
           <Blog
             key={i}
             blog={blog}
             addNewLike={addNewLike}
-            deleteSelectedBlog={({ blog }) => blogService.deleteBlog(blog.id)}
+            deleteSelectedBlog={handleDelete}
             user={user}
           />
         ))}

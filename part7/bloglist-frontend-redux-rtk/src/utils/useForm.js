@@ -17,7 +17,7 @@ export default function useForm(initialState = {}) {
   }
 
   function clearForm() {
-    setInputs(initialState);
+    setInputs({});
   }
 
   const service = {

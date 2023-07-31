@@ -14,8 +14,11 @@ export default function Blog({ blog, addNewLike, deleteSelectedBlog, user }) {
   }
 
   function addLike() {
-    blog.likes += 1;
-    addNewLike({ blog });
+    const newBlog = {
+      ...blog,
+      likes: blog.likes + 1
+    }
+    addNewLike(newBlog);
   }
 
   function handleDeleteBlog() {
@@ -24,7 +27,7 @@ export default function Blog({ blog, addNewLike, deleteSelectedBlog, user }) {
         `are you sure you want to delete ${blog.title} by ${blog.author}`,
       )
     ) {
-      deleteSelectedBlog({ blog });
+      deleteSelectedBlog(blog);
     }
   }
 
