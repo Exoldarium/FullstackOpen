@@ -1,6 +1,9 @@
+import { useDispatch } from 'react-redux';
 import useForm from '../utils/useForm';
+import { addNewBlog } from '../reducers/blogReducer';
 
-export default function AddNewBlog({ addNewBlog }) {
+export default function AddNewBlog() {
+  const dispatch = useDispatch()
   const [inputs, formService] = useForm({
     title: '',
     author: '',
@@ -9,8 +12,7 @@ export default function AddNewBlog({ addNewBlog }) {
 
   function addNewBlogOnSubmit(e) {
     e.preventDefault();
-    addNewBlog(inputs);
-    formService.clearForm();
+    dispatch(addNewBlog(inputs));
   }
 
   return (

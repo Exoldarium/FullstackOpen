@@ -1,6 +1,9 @@
 import { useState } from 'react';
+import { deleteExistingBlog, updateExistingBlog } from '../reducers/blogReducer';
+import { useDispatch } from 'react-redux';
 
-export default function Blog({ blog, addNewLike, deleteSelectedBlog, user }) {
+export default function Blog({ blog, user }) {
+  const dispatch = useDispatch();
   const [descriptive, setDescriptive] = useState(false);
 
   const expandedView = { height: 'fit-content' };
@@ -13,18 +16,9 @@ export default function Blog({ blog, addNewLike, deleteSelectedBlog, user }) {
     setDescriptive(!descriptive);
   }
 
-  function addLike() {
-    blog.likes += 1;
-    addNewLike({ blog });
-  }
-
   function handleDeleteBlog() {
-    if (
-      window.confirm(
-        `are you sure you want to delete ${blog.title} by ${blog.author}`,
-      )
-    ) {
-      deleteSelectedBlog({ blog });
+    if (window.confirm(`are you sure you want to delete ${blog.title} by ${blog.author}`)) {
+      dispatch(deleteExistingBlog(blog.id));
     }
   }
 
@@ -41,7 +35,7 @@ export default function Blog({ blog, addNewLike, deleteSelectedBlog, user }) {
       <p>
         likes {blog.likes}
         <button
-          onClick={addLike}
+          onClick={() => dispatch(updateExistingBlog(blog))}
           id={blog.id}
           className="likeButton"
           data-cy="likeButton"

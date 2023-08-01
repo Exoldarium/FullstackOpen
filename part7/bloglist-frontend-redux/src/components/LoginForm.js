@@ -1,14 +1,29 @@
+import { useDispatch } from 'react-redux';
 import useForm from '../utils/useForm';
+import { initializeLogin, setUser } from '../reducers/userReducer';
+import blogService from '../services/blogs';
+import { useEffect } from 'react';
 
-export default function LoginForm({ handleLogin }) {
+export default function LoginForm() {
+  const dispatch = useDispatch();
   const [inputs, formService] = useForm({
     username: '',
     password: '',
   });
 
+  useEffect(() => {
+    // we grab our user details from local storage so that user stays logged in
+    const loggedUser = localStorage.getItem('loginCredentials');
+    if (loggedUser) {
+      const user = JSON.parse(loggedUser);
+      dispatch(setUser(user));
+      blogService.setToken(user.token);
+    }
+  }, []);
+
   function userLogin(e) {
     e.preventDefault();
-    handleLogin(inputs);
+    dispatch(initializeLogin(inputs));
   }
 
   return (
