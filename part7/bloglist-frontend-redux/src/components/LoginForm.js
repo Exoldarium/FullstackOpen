@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 import useForm from '../utils/useForm';
-import { initializeLogin, setUser } from '../reducers/userReducer';
+import { initializeLogin, setUser } from '../reducers/loginReducer';
 import blogService from '../services/blogs';
 import { useEffect } from 'react';
 

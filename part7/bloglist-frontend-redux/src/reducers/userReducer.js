@@ -1,35 +1,34 @@
 import { createSlice } from '@reduxjs/toolkit';
-import loginService from '../services/login';
-import blogService from '../services/blogs';
-import { setMessage } from './messageReducer';
+import usersService from '../services/users';
 
-const userSlice = createSlice({
-  name: 'user',
-  initialState: 'USER',
+const usersSlice = createSlice({
+  name: 'users',
+  initialState: [],
   reducers: {
-    setUser(state, action) {
+    setUsers(state, action) {
+      return action.payload
+    },
+    setSpecificUser(state, action) {
       return action.payload
     }
   }
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUsers, setSpecificUser } = usersSlice.actions;
 
-export function initializeLogin(credentials) {
+export function initializeUsers() {
   return async (dispatch) => {
-    try {
-      const user = await loginService.login(credentials);
-      window.localStorage.setItem('loginCredentials', JSON.stringify(user));
-      blogService.setToken(user.token);
-      dispatch(setUser(user));
-    } catch (err) {
-      console.log(err);
-      dispatch(setMessage({
-        content: 'wrong credentials',
-        type: 'ERROR'
-      }, 5));
-    }
+    const users = await usersService.getAll();
+    dispatch(setUsers(users));
   }
 }
 
-export default userSlice.reducer;
+export function initializeSpecificUser(id) {
+  return async (dispatch) => {
+    const user = await usersService.getSpecificUser(id);
+    dispatch(setSpecificUser(user));
+  }
+}
+
+export default usersSlice.reducer;
+

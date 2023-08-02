@@ -7,6 +7,15 @@ blogRouter.get('/', async (req, res) => {
   res.json(blog);
 });
 
+blogRouter.get('/:id', async (req, res, next) => {
+  try {
+    const blog = await Blog.findById(req.params.id);
+    res.json(blog);
+  } catch (err) {
+    next(err);
+  }
+});
+
 blogRouter.post('/', middleware.getUser, async (req, res, next) => {
   const body = req.body;
   const user = req.user;

@@ -1,53 +1,50 @@
 import './index.css';
-import { useEffect, useRef } from 'react';
-import Blog from './components/Blog';
+import { useEffect } from 'react';
 import NotificationMessage from './components/NotificationMessage';
 import AddNewBlog from './components/AddNewBlog';
 import LoginForm from './components/LoginForm';
 import UserInfo from './components/UserInfo';
-import Toggleable from './components/Toggleable';
 import { useDispatch, useSelector } from 'react-redux';
-import { initializeBlogs, sortExistingBlogs } from './reducers/blogReducer';
+import { initializeBlogs } from './reducers/blogReducer';
+import Users from './components/Users';
+import Nav from './components/Nav';
+import { Route, Routes } from 'react-router-dom';
+import SingleUser from './components/SingleUser';
+import BlogList from './components/BlogList';
 
 const App = () => {
   const dispatch = useDispatch();
   const blogsData = useSelector(({ blogs }) => {
     return blogs
   });
-  const user = useSelector(({ user }) => {
-    if (user !== 'USER') {
-      return user
+  const loginData = useSelector(({ login }) => {
+    if (login !== 'LOGIN') {
+      return login
     }
   });
-  const blogFormRef = useRef();
 
   useEffect(() => {
-    dispatch(initializeBlogs())
+    dispatch(initializeBlogs());
   }, [dispatch]);
 
   return (
     <div>
       <h2>blogs</h2>
+      <Nav />
       <NotificationMessage />
-      {user ? <UserInfo /> : <LoginForm />}
-      {user &&
-        <Toggleable ref={blogFormRef}>
-          <AddNewBlog />
-        </Toggleable>
-      }
-      {user &&
-        <button onClick={() => dispatch(sortExistingBlogs())}>sort</button>
-      }
-      {(user && blogsData) &&
-        blogsData.map(
-          (blog, i) =>
-            <Blog
-              key={i}
-              blog={blog}
-              user={user}
-            />
-        )
-      }
+      {loginData ? <UserInfo /> : <LoginForm />}
+      <Routes>
+        {loginData &&
+          <>
+            <Route path="/create" element={<AddNewBlog />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/users/:id" element={<SingleUser />} />
+          </>
+        }
+        {(loginData && blogsData) &&
+          <Route path="/blogs" element={<BlogList blogs={blogsData} />} />
+        }
+      </Routes>
     </div>
   );
 }
