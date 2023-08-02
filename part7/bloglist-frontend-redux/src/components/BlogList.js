@@ -1,10 +1,14 @@
-import Blog from './Blog';
+import { Link } from 'react-router-dom';
 
 export default function BlogList({ blogs }) {
   return (
     <>
       {blogs.map(blog =>
-        <Blog blog={blog} key={blog.id} />
+        <Link to={`/blogs/${blog.id}`} key={blog.id}>
+          <div style={{ border: '1px solid black' }}>
+            {blog.title}
+          </div>
+        </Link>
       )}
     </>
   );

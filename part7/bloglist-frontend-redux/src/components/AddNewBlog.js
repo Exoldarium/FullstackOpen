@@ -1,9 +1,11 @@
 import { useDispatch } from 'react-redux';
 import useForm from '../utils/useForm';
 import { addNewBlog } from '../reducers/blogReducer';
+import { useNavigate } from 'react-router-dom';
 
 export default function AddNewBlog() {
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [inputs, formService] = useForm({
     title: '',
     author: '',
@@ -13,6 +15,7 @@ export default function AddNewBlog() {
   function addNewBlogOnSubmit(e) {
     e.preventDefault();
     dispatch(addNewBlog(inputs));
+    navigate('/blogs');
   }
 
   return (
