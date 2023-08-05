@@ -2,18 +2,16 @@ import { useDispatch } from 'react-redux';
 import { deleteExistingBlog, updateExistingBlog } from '../reducers/blogReducer';
 import { useNavigate } from 'react-router-dom';
 
-export default function Blog({ blog }) {
-  // TODO: remove button should only show for current users blogs
+export default function Blog({ blog, currentUser }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const loggedUser = currentUser.id === blog.user.id;
 
   function deleteBlog() {
     dispatch(deleteExistingBlog(blog.id))
     navigate('/blogs');
   }
 
-  if (!blog) {
+  if (!blog || !currentUser) {
     return null
   } else {
     return (
@@ -25,7 +23,7 @@ export default function Blog({ blog }) {
           <button onClick={() => dispatch(updateExistingBlog(blog))}>like</button>
         </div>
         <p>added by {blog.author}</p>
-        {/* {loggedUser && <button onClick={deleteBlog}>remove</button>} */}
+        {currentUser.id === blog.user.id && <button onClick={deleteBlog}>remove</button>}
       </div>
     )
   }

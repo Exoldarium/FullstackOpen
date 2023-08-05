@@ -34,7 +34,6 @@ export const { setBlogs,
 export function initializeBlogs() {
   return async (dispatch) => {
     const blogs = await blogService.getAll();
-    console.log(blogs)
     dispatch(setBlogs(blogs));
   }
 }

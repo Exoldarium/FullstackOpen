@@ -1,5 +1,4 @@
 export default function SingleUser({ user }) {
-  console.log(user);
   if (!user) {
     return null
   } else {
