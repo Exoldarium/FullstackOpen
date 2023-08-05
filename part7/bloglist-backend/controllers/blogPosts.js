@@ -39,7 +39,25 @@ blogRouter.post('/', middleware.getUser, async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+});
 
+blogRouter.post('/:id/comments', middleware.getUser, async (req, res, next) => {
+  const body = req.body;
+  console.log(typeof body.comment)
+  const newComment = {
+    comment: body.comment,
+  };
+
+  try {
+    const blog = await Blog.findById(req.params.id);
+
+    blog.comments = blog.comments.concat(newComment);
+    await blog.save();
+
+    res.status(201).json(newComment);
+  } catch (err) {
+    next(err);
+  }
 });
 
 blogRouter.put('/:id', async (req, res, next) => {

@@ -6,7 +6,11 @@ export default function SingleUser({ user }) {
       <div>
         <p>{user.name}</p>
         <h1>added blogs</h1>
-        <p>added blogs {user.blogs.length}</p>
+        <ul>
+          {user.blogs.map(blog => (
+            <li key={blog.id}>{blog.title}</li>
+          ))}
+        </ul>
       </div>
     )
   }

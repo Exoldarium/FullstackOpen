@@ -20,6 +20,11 @@ const blogSlice = createSlice({
     },
     sortBlogs(state, action) {
       return state.sort((firstBlog, secondBlog) => secondBlog.likes - firstBlog.likes);
+    },
+    addComment(state, action) {
+      const blog = state.find(blog => blog.id === action.payload.id);
+      blog.comments.push(action.payload.comment);
+      return state
     }
   }
 });
@@ -28,7 +33,8 @@ export const { setBlogs,
   addBlog,
   updateBlog,
   deleteBlog,
-  sortBlogs
+  sortBlogs,
+  addComment
 } = blogSlice.actions;
 
 export function initializeBlogs() {
@@ -100,6 +106,28 @@ export function deleteExistingBlog(id) {
 export function sortExistingBlogs() {
   return async (dispatch) => {
     dispatch(sortBlogs());
+  }
+}
+
+export function addNewComment(comment, id) {
+  return async (dispatch) => {
+    try {
+      const newComment = {
+        comment
+      }
+      const res = await blogService.addComment(newComment, id);
+      const commentToAdd = {
+        comment: res.comment,
+        id
+      }
+      dispatch(addComment(commentToAdd));
+    } catch (err) {
+      console.log(err);
+      dispatch(setMessage({
+        content: 'bad request',
+        type: 'ERROR'
+      }, 5));
+    }
   }
 }
 

@@ -12,8 +12,6 @@ export default function UserInfo() {
     }
   });
 
-  console.log(location.pathname)
-
   function handleLogout() {
     dispatch(setUser('LOGIN'));
     window.localStorage.clear();
