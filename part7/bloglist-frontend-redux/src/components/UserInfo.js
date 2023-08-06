@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../reducers/loginReducer';
-import { sortExistingBlogs } from '../reducers/blogReducer';
 import { useLocation } from 'react-router-dom';
 
 export default function UserInfo() {
@@ -22,8 +21,6 @@ export default function UserInfo() {
       <div>
         <p>{loginData.name} logged in</p>
         <button onClick={handleLogout}>Log out</button>
-        {location.pathname === '/blogs' &&
-          <button onClick={() => dispatch(sortExistingBlogs())}>sort</button>}
       </div>
       {location.pathname === '/users' && <h1>Users</h1>}
     </>

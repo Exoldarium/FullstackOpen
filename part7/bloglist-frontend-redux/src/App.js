@@ -5,7 +5,7 @@ import AddNewBlog from './components/AddNewBlog';
 import LoginForm from './components/LoginForm';
 import UserInfo from './components/UserInfo';
 import { useDispatch, useSelector } from 'react-redux';
-import { initializeBlogs } from './reducers/blogReducer';
+import { initializeBlogs, sortExistingBlogs } from './reducers/blogReducer';
 import Users from './components/Users';
 import Nav from './components/Nav';
 import { Route, Routes, useMatch } from 'react-router-dom';
@@ -13,6 +13,7 @@ import SingleUser from './components/SingleUser';
 import BlogList from './components/BlogList';
 import Blog from './components/Blog';
 import { initializeUsers } from './reducers/userReducer';
+import { GlobalStyles } from './styles/GlobalStyles';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -40,11 +41,14 @@ const App = () => {
   console.log({ blogs: blogsData, users: users })
 
   return (
-    <div>
-      <h2>blogs</h2>
+    <>
+      <GlobalStyles />
       <Nav />
-      <NotificationMessage />
       {loginData ? <UserInfo /> : <LoginForm />}
+      <h2>blogs</h2>
+      {location.pathname === '/blogs' &&
+        <button onClick={() => dispatch(sortExistingBlogs())}>sort</button>}
+      <NotificationMessage />
       <Routes>
         {loginData &&
           <>
@@ -58,7 +62,7 @@ const App = () => {
           <Route path="/blogs" element={<BlogList blogs={blogsData} />} />
         }
       </Routes>
-    </div>
+    </>
   );
 }
 

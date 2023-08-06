@@ -23,8 +23,7 @@ const blogSlice = createSlice({
     },
     addComment(state, action) {
       const blog = state.find(blog => blog.id === action.payload.id);
-      blog.comments.push(action.payload.comment);
-      return state
+      blog.comments.push(action.payload);
     }
   }
 });
