@@ -140,7 +140,7 @@ const resolvers = {
         const findBook = books.filter(book => {
           for (const key of book.genres) {
             if (args.genre === key) {
-              return book
+              return book;
             }
           }
         });
