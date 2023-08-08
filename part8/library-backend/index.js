@@ -1,6 +1,7 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone');
 const { GraphQLError } = require('graphql');
+const { v4: uuidv4 } = require('uuid');
 
 let authors = [
   {
@@ -112,13 +113,26 @@ const typeDefs = `
     id: ID!
     bookCount: Int
   }
-
+  
   type Book {
     title: String!
     published: Int!
     author: String!
     id: ID!
     genres: [String!]!
+  }
+
+  type Mutation {
+    addBook(
+      title: String!
+      author: String!
+      published: Int!
+      genres: [String!]!
+    ): Book
+    editAuthor(
+      name: String!
+      setBornTo: Int!
+    ): Author
   }
 `;
 
@@ -127,6 +141,7 @@ const resolvers = {
     bookCount: () => books.length,
     authorCount: () => authors.length,
     allBooks: (root, args) => {
+      // if there's no name or genre throw error
       if (!args.author && !args.genre) {
         throw new GraphQLError('Couldnt find that author or genre', {
           extensions: {
@@ -135,20 +150,92 @@ const resolvers = {
           }
         })
       } else if (args.author) {
+        // if only author's name is provided 
         return books.filter(book => args.author === book.author ? book.title : "");
       } else if (args.genre) {
+        // if only genre is provided 
         const findBook = books.filter(book => {
+          // loop through the genre array and find matches
           for (const key of book.genres) {
             if (args.genre === key) {
               return book;
             }
           }
         });
+
         return findBook
       }
 
     },
     allAuthors: () => authors
+  },
+  Author: {
+    bookCount: (root) => {
+      let count = 0;
+
+      // check the occurence of authors in the book array
+      for (const key of books) {
+        if (key.author === root.name) {
+          count += 1;
+        }
+      }
+
+      return count
+    }
+  },
+  Mutation: {
+    addBook: (root, args) => {
+      const findAuthor = authors.find(a => a.name === args.author);
+
+      // if the author is already in the array, use the existing id
+      if (findAuthor) {
+        const bookToAdd = {
+          ...args,
+          id: findAuthor.id
+        }
+
+        books = books.concat(bookToAdd);
+        return bookToAdd
+      }
+
+      // else create a new entry for authors and books
+      const bookToAdd = {
+        ...args,
+        id: uuidv4()
+      }
+      const authorToAdd = {
+        name: args.author,
+        id: bookToAdd.id
+      }
+
+      books = books.concat(bookToAdd);
+      authors = authors.concat(authorToAdd);
+
+      return bookToAdd
+    },
+    editAuthor: (root, args) => {
+      const findAuthor = authors.find(a => a.name === args.name);
+      // throw an error if there's no author
+      if (!findAuthor) {
+        throw new GraphQLError('Couldnt find that author', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.name
+          }
+        });
+      }
+
+      const authorToUpdate = {
+        name: args.name,
+        born: args.setBornTo
+      }
+
+      // filter and update authors with the updated author
+      authors = authors.filter(a => a.name !== authorToUpdate.name);
+      authors = authors.concat(authorToUpdate);
+
+      return authorToUpdate
+    }
   }
 }
 
