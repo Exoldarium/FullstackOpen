@@ -143,12 +143,7 @@ const resolvers = {
     allBooks: (root, args) => {
       // if there's no name or genre throw error
       if (!args.author && !args.genre) {
-        throw new GraphQLError('Couldnt find that author or genre', {
-          extensions: {
-            code: 'BAD_USER_INPUT',
-            invalidArgs: args.author
-          }
-        })
+        return books
       } else if (args.author) {
         // if only author's name is provided 
         return books.filter(book => args.author === book.author ? book.title : "");
