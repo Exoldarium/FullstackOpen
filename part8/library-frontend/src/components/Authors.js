@@ -9,25 +9,27 @@ export default function Authors() {
 
   return (
     <>
-      <h1>authors</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>name</th>
-            <th>born</th>
-            <th>books</th>
-          </tr>
-        </thead>
-        {data.allAuthors.map(author => (
-          <tbody key={author.id}>
+      <div>
+        <h1>authors</h1>
+        <table>
+          <thead>
             <tr>
-              <td>{author.name}</td>
-              <td>{author.born}</td>
-              <td>{author.bookCount}</td>
+              <th>name</th>
+              <th>born</th>
+              <th>books</th>
             </tr>
-          </tbody>
-        ))}
-      </table>
+          </thead>
+          {data.allAuthors.map(author => (
+            <tbody key={author.id}>
+              <tr>
+                <td>{author.name}</td>
+                <td>{author.born}</td>
+                <td>{author.bookCount}</td>
+              </tr>
+            </tbody>
+          ))}
+        </table>
+      </div>
     </>
   )
 }

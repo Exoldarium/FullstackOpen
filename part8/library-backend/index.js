@@ -222,7 +222,8 @@ const resolvers = {
 
       const authorToUpdate = {
         name: args.name,
-        born: args.setBornTo
+        born: args.setBornTo,
+        id: findAuthor.id
       }
 
       // filter and update authors with the updated author

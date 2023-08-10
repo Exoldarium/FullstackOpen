@@ -12,7 +12,7 @@ export default function AddBook({ setError }) {
     genres: []
   });
   // we add the new book and convert published key to Int
-  const [addBook, { data, error }] = useMutation(ADD_BOOK, {
+  const [addBook] = useMutation(ADD_BOOK, {
     variables: {
       ...inputs,
       published: Number(inputs.published)
@@ -24,12 +24,15 @@ export default function AddBook({ setError }) {
     }
   });
 
-
-  function addNewBook(e) {
+  async function addNewBook(e) {
     e.preventDefault();
-    addBook();
-    clearForm();
-    navigate('/books');
+    const res = await addBook();
+    if (res.errors) {
+      return
+    } else {
+      clearForm();
+      navigate('/books');
+    }
   }
 
   return (

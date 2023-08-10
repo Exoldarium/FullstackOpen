@@ -5,6 +5,7 @@ import Books from "./components/Books";
 import Nav from "./components/Nav";
 import { Route, Routes } from "react-router-dom";
 import NotificationMessage from "./components/NotificationMessage";
+import EditAuthor from "./components/EditAuthor";
 
 export default function App() {
   const [errorMessage, setErrorMessage] = useState('');
@@ -13,16 +14,20 @@ export default function App() {
     setErrorMessage(message)
     setTimeout(() => {
       setErrorMessage(null)
-    }, 10000)
+    }, 10000);
   }
-
 
   return (
     <>
       <Nav />
       <NotificationMessage errorMessage={errorMessage} />
       <Routes>
-        <Route path="/authors" element={<Authors />} />
+        <Route path="/" element={
+          <>
+            <Authors />
+            <EditAuthor setError={notify} />
+          </>
+        } />
         <Route path="/books" element={<Books />} />
         <Route path="/addBook" element={<AddBook setError={notify} />} />
       </Routes>
