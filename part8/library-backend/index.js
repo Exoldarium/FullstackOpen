@@ -76,10 +76,7 @@ const resolvers = {
           return author.name
         }
       } else if (args.genre) {
-        console.log(args.genre)
-        // if only genre is provided 
-        const findBook = await Book.collection.find(args.genre);
-        console.log(findBook)
+        return Book.find({ genres: { $in: [args.genre] } }).populate('author');
       }
 
     },
