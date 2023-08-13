@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone');
-const { v4: uuidv4 } = require('uuid');
 const resolvers = require('./resolvers/resolvers');
 const typeDefs = require('./types/typeDefs');
 const jwt = require('jsonwebtoken');

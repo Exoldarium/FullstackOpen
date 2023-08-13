@@ -3,6 +3,7 @@ import { ALL_BOOKS } from "../queries"
 
 export default function Books() {
   const { data, loading, error } = useQuery(ALL_BOOKS);
+  console.log(data)
 
   if (loading) return <div>loading ...</div>
   if (error) return <div>there was an error</div>
@@ -22,7 +23,7 @@ export default function Books() {
           <tbody key={book.id}>
             <tr>
               <td>{book.title}</td>
-              <td>{book.author}</td>
+              <td>{book.author.name}</td>
               <td>{book.published}</td>
             </tr>
           </tbody>

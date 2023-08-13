@@ -6,12 +6,12 @@ import { useState } from "react";
 
 export default function EditAuthor({ setError }) {
   const { inputs, handleInputs, clearForm } = useForm({
-    name: '',
     setBornTo: ''
   });
   const [selectedOption, setSelectedOption] = useState(null);
 
   const { data } = useQuery(ALL_AUTHORS);
+  console.log(inputs)
 
   const authors = data?.allAuthors.map(author => {
     return {
@@ -20,9 +20,9 @@ export default function EditAuthor({ setError }) {
     }
   });
 
-  const [editAuthor] = useMutation(EDIT_AUTHOR, {
+  const [editAuthor, result] = useMutation(EDIT_AUTHOR, {
     variables: {
-      name: selectedOption.value,
+      name: selectedOption?.value,
       setBornTo: Number(inputs.setBornTo)
     },
     refetchQueries: [{ query: ALL_AUTHORS }],
@@ -31,6 +31,7 @@ export default function EditAuthor({ setError }) {
       setError(messages);
     }
   });
+  console.log(result)
 
   function addBirthYear(e) {
     e.preventDefault();

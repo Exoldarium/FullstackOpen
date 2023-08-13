@@ -50,27 +50,27 @@ const resolvers = {
       return context.currentUser
     }
   },
-  Author: {
-    bookCount: (root) => {
-      let count = 0;
+  // Author: {
+  //   bookCount: (root) => {
+  //     let count = 0;
 
-      // check the occurence of authors in the book array
-      for (const key of books) {
-        if (key.author === root.name) {
-          count += 1;
-        }
-      }
+  //     // check the occurence of authors in the book array
+  //     for (const key of books) {
+  //       if (key.author === root.name) {
+  //         count += 1;
+  //       }
+  //     }
 
-      return count
-    }
-  },
+  //     return count
+  //   }
+  // },
   Mutation: {
     addBook: async (root, args, context) => {
       // throw an error if the user is not logged in
       if (!context.currentUser) {
-        return new GraphQLError('authorization failed', {
+        throw new GraphQLError('authorization failed', {
           extensions: {
-            code: 'BAD_USER_INPUT',
+            code: 'GRAPHQL_VALIDATION_FAILED',
           }
         });
       }
@@ -80,6 +80,7 @@ const resolvers = {
 
       // if the author is already in the array, use the existing id
       if (findAuthor) {
+        bookToAdd.author = findAuthor;
         await bookToAdd.save().catch(err => {
           throw new GraphQLError('adding book failed', {
             extensions: {
@@ -88,8 +89,6 @@ const resolvers = {
             }
           });
         });
-
-        bookToAdd.author = findAuthor;
 
         return bookToAdd
       }
@@ -114,17 +113,17 @@ const resolvers = {
     editAuthor: async (root, args, context) => {
       // throw an error if the user is not logged in
       if (!context.currentUser) {
-        return new GraphQLError('authorization failed', {
+        throw new GraphQLError('authorization failed', {
           extensions: {
-            code: 'BAD_USER_INPUT',
+            code: 'GRAPHQL_VALIDATION_FAILED',
           }
         });
       }
 
       const findAuthor = await Author.findOne({ name: args.name });
-      findAuthor.born = args.setBornTo;
 
       try {
+        findAuthor.born = args.setBornTo;
         await findAuthor.save();
       } catch (err) {
         throw new GraphQLError('editing author failed', {
@@ -135,7 +134,7 @@ const resolvers = {
           }
         });
       }
-
+      console.log(findAuthor)
       return findAuthor
     },
     createUser: async (root, args) => {
@@ -157,7 +156,7 @@ const resolvers = {
       if (!findUser || args.password !== 'secret') {
         throw new GraphQLError('login failed', {
           extensions: {
-            code: 'BAD_USER_INPUT',
+            code: 'GRAPHQL_VALIDATION_FAILED',
           }
         });
       }
