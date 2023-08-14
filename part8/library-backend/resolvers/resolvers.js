@@ -30,8 +30,8 @@ const resolvers = {
           return author.name
         }
       } else if (args.genre) {
-        // if only genre is provided
-        return Book
+        console.log(args.genre)
+        const findBook = await Book
           .find({ genres: { $in: [args.genre] } })
           .populate('author')
           .catch(err => {
@@ -42,6 +42,8 @@ const resolvers = {
               }
             });
           });
+        console.log(findBook)
+        return findBook
       }
 
     },

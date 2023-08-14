@@ -15,9 +15,9 @@ export default function App() {
   const user = useUser();
 
   function notify(message) {
-    setErrorMessage(message)
+    setErrorMessage(message);
     setTimeout(() => {
-      setErrorMessage(null)
+      setErrorMessage(null);
     }, 10000);
   }
 
