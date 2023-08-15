@@ -5,6 +5,7 @@ import { useState } from "react";
 export default function Books() {
   // track if the user is filtering the books
   const [filter, setFilter] = useState(false);
+  const [genreTitle, setGenreTitle] = useState('all genres');
   const { data, loading, error } = useQuery(ALL_BOOKS);
   const genresSet = new Set();
 
@@ -29,6 +30,7 @@ export default function Books() {
         genre: e.target.textContent
       }
     });
+    setGenreTitle(e.target.textContent)
     setFilter(true);
   }
 
@@ -38,7 +40,7 @@ export default function Books() {
   return (
     <>
       <h1>books</h1>
-      <p>in genre</p>
+      <p>in genre {genreTitle}</p>
       <table>
         <thead>
           <tr>
@@ -73,7 +75,10 @@ export default function Books() {
         {genres.map((genre, i) => (
           <button key={i} type="button" onClick={filterByGenre}>{genre}</button>
         ))}
-        <button type="button" onClick={() => setFilter(false)}>all genres</button>
+        <button type="button" onClick={() => {
+          setGenreTitle('all genres')
+          setFilter(false)
+        }}>all genres</button>
       </div>
     </>
   )

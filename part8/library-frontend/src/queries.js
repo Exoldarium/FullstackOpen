@@ -105,3 +105,17 @@ export const LOGIN_MUTATION = gql`
     }
   }
 `;
+
+// SUBSCRIPTIONS
+export const BOOK_ADDED = gql`
+  subscription BOOK_ADDED{
+    bookAdded {
+      published
+      author {
+        name
+      }
+      title
+      genres
+    }
+  }
+`;

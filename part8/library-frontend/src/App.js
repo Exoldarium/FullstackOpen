@@ -8,8 +8,11 @@ import NotificationMessage from "./components/NotificationMessage";
 import EditAuthor from "./components/EditAuthor";
 import Login from "./components/Login";
 import { useUser } from "./hooks/useUser";
+import { useApolloClient, useSubscription } from "@apollo/client";
+import { ALL_BOOKS, BOOK_ADDED } from "./queries";
 
 export default function App() {
+  const client = useApolloClient();
   const [errorMessage, setErrorMessage] = useState('');
   const [token, setToken] = useState('');
   const user = useUser();
@@ -20,6 +23,19 @@ export default function App() {
       setErrorMessage(null);
     }, 10000);
   }
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      const addedBook = data.data.bookAdded;
+      notify(`${addedBook.title} added`)
+
+      client.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+        return {
+          allBooks: allBooks.concat(addedBook)
+        }
+      })
+    }
+  })
 
   return (
     <>
