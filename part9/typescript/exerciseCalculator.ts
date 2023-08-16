@@ -19,7 +19,9 @@ function checkArguments(args: string[]): CalculateValues {
 
   // convert the string to a numbers array
   const numbersArray = args[2].match(/\d+\.?\d*/g).map(Number);
-  if (numbersArray.length < 7) throw new Error('Include number for each day of the week, use 0 if no exercise');
+  if (numbersArray.length < 7) throw new Error(
+    'Include a number for each day of the week, use 0 if no exercise, there should be no spaces between numbers'
+  );
 
   for (const number of numbersArray) {
     if (isNaN(Number(number))) throw new Error('values should be numbers');
@@ -36,9 +38,11 @@ function checkArguments(args: string[]): CalculateValues {
 }
 
 function calculateExercises(data: number[], target: number): DisplayValues {
+  // get the average amount of exercise
   const sum = data.reduce((tally, currentValue) => tally + currentValue);
   const average = sum / 7;
 
+  // check how many exercise days
   const trainingDays = data.find(day => {
     let count = 0;
 
