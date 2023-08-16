@@ -17,22 +17,22 @@ function checkArguments(args: string[]): CalculateValues {
   if (args.length < 10) throw new Error('Too few arguments');
   if (args.length > 10) throw new Error('Too many arguments');
 
-  const arr = [];
+  const value1 = [];
 
   for (let i = 2; i < args.length; i++) {
     if (!isNaN(Number(args[i]))) {
       // loop through the args and push converted numbers to array
-      arr.push(Number(args[i]));
+      value1.push(Number(args[i]));
     } else {
       throw new Error('values should be numbers');
     }
   }
 
   // get the last value from the array
-  const value2 = Number(arr.pop());
+  const value2 = Number(value1.pop());
 
   return {
-    value1: arr,
+    value1,
     value2
   };
 }
