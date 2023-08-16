@@ -14,27 +14,27 @@ interface DisplayValues {
 }
 
 function checkArguments(args: string[]): CalculateValues {
-  if (args.length < 4) throw new Error('Too few arguments');
-  if (args.length > 4) throw new Error('Too many arguments');
+  if (args.length < 10) throw new Error('Too few arguments');
+  if (args.length > 10) throw new Error('Too many arguments');
 
-  // convert the string to a numbers array
-  const numbersArray = args[2].match(/\d+\.?\d*/g).map(Number);
-  if (numbersArray.length < 7) throw new Error(
-    'Include a number for each day of the week, use 0 if no exercise, numbers separated by commas no spaces'
-  );
+  const arr = [];
 
-  for (const number of numbersArray) {
-    if (isNaN(Number(number))) throw new Error('values should be numbers');
-  }
-
-  if (!isNaN(Number(args[3]))) {
-    return {
-      value1: numbersArray,
-      value2: Number(args[3])
+  for (let i = 2; i < args.length; i++) {
+    if (!isNaN(Number(args[i]))) {
+      // loop through the args and push converted numbers to array
+      arr.push(Number(args[i]));
+    } else {
+      throw new Error('values should be numbers');
     }
-  } else {
-    throw new Error('values should be numbers');
   }
+
+  // get the last value from the array
+  const value2 = Number(arr.pop());
+
+  return {
+    value1: arr,
+    value2
+  };
 }
 
 function calculateExercises(data: number[], target: number): DisplayValues {
@@ -42,20 +42,12 @@ function calculateExercises(data: number[], target: number): DisplayValues {
   const sum = data.reduce((tally, currentValue) => tally + currentValue);
   const average = sum / 7;
 
-  // check how many exercise days
-  const trainingDays = data.find(day => {
-    let count = 0;
-
-    if (day !== 0) {
-      count += 1;
-    }
-
-    return count;
-  });
+  // filter out the days where there was no exercise
+  const trainingDays = data.filter(day => day !== 0);
 
   const dataToPrint = {
     periodLength: 7,
-    trainingDays,
+    trainingDays: trainingDays.length,
     success: average > target ? true : false,
     rating: average > target ? 3 : 1,
     ratingDescription: average > target ? 'Good job!' : 'Almost there',
@@ -76,3 +68,5 @@ try {
   }
   console.log(error.message);
 }
+
+checkArguments(process.argv);
