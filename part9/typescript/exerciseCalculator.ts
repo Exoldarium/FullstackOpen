@@ -68,5 +68,3 @@ try {
   }
   console.log(error.message);
 }
-
-checkArguments(process.argv);
