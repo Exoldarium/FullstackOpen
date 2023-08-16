@@ -20,7 +20,7 @@ function checkArguments(args: string[]): CalculateValues {
   // convert the string to a numbers array
   const numbersArray = args[2].match(/\d+\.?\d*/g).map(Number);
   if (numbersArray.length < 7) throw new Error(
-    'Include a number for each day of the week, use 0 if no exercise, there should be no spaces between numbers'
+    'Include a number for each day of the week, use 0 if no exercise, numbers separated by commas no spaces'
   );
 
   for (const number of numbersArray) {
