@@ -5,21 +5,21 @@ interface DivideValues {
   value2: number;
 }
 
-function parseArguments(args: string[]): DivideValues {
-  if (args.length < 4) throw new Error('Too few arguments');
-  if (args.length > 4) throw new Error('Too many arguments');
+export function parseArguments(args: any): DivideValues {
+  if (args.length < 2) throw new Error('Too few arguments');
+  if (args.length > 2) throw new Error('Too many arguments');
 
-  if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
+  if (!isNaN(Number(args[0])) && !isNaN(Number(args[1]))) {
     return {
-      value1: Number(args[3]),
-      value2: Number(args[2])
+      value1: Number(args[0]),
+      value2: Number(args[1])
     }
   } else {
     throw new Error('Provided values must be numbers');
   }
 }
 
-function calculateBmi(weight: number, height: number): string {
+export function calculateBmi(height: number, weight: number): string {
   const total = weight / Math.pow(height / 100, 2);
 
   if (total < 18.5) {
@@ -29,15 +29,4 @@ function calculateBmi(weight: number, height: number): string {
   } else {
     return 'Normal (healthy weight)';
   }
-}
-
-try {
-  const { value1, value2 } = parseArguments(process.argv);
-  console.log(calculateBmi(value1, value2));
-} catch (error) {
-  let errorMessage = 'There was an error';
-  if (error instanceof Error) {
-    errorMessage += 'Error' + error.message;
-  }
-  console.log(error.message);
 }
