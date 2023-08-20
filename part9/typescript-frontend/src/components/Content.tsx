@@ -1,22 +1,16 @@
-import { CourseData } from "../App";
+import Part from "./Part";
+import { CoursePart } from "../types";
 
 interface CourseParts {
-  courseParts: CourseData[]
+  courseParts: CoursePart[]
 }
 
 export default function Content({ courseParts }: CourseParts) {
   return (
     <>
-      <p>
-        {courseParts[0].name} {courseParts[0].exerciseCount}
-      </p>
-      <p>
-        {courseParts[1].name} {courseParts[1].exerciseCount}
-      </p>
-      <p>
-        {courseParts[2].name} {courseParts[2].exerciseCount}
-      </p>
-      <p></p>
+      {courseParts.map((part, i) => (
+        <Part part={part} key={i} />
+      ))}
     </>
   )
 }
