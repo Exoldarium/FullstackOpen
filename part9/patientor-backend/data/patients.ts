@@ -44,6 +44,8 @@ const data = [
   }
 ];
 
+// we parse the json data so that we can access the fields correctly
+// because we created an enum type for gender, typsecript will throw an error for that field
 const patientData: PatientEntry[] = data.map(p => {
   const obj = toNewPatientEntry(p) as PatientEntry;
   obj.id = p.id;

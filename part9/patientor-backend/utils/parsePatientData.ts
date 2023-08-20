@@ -13,6 +13,7 @@ function isGender(param: string): param is Gender {
     // we can't assume that gender paramater will be a string
     // that's why we convert it to string
     .map(v => v.toString())
+    // if the correct gender is present, true will be returned
     .includes(param);
 }
 
