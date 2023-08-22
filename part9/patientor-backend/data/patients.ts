@@ -1,9 +1,9 @@
 import { PatientEntry } from "../src/types";
-import toNewPatiententries from "../utils/parsePatientData";
+// import toNewPatiententries from "../utils/parsePatientData";
 
 import { Gender } from '../src/types';
 
-const data = [
+const data: PatientEntry[] = [
   {
     id: 'd2773336-f723-11e9-8f0b-362b9e155667',
     name: 'John McClane',
@@ -116,11 +116,12 @@ const data = [
 ];
 // we parse the json data so that we can access the fields correctly
 // because we created an enum type for gender, typsecript will throw an error for that field
-const patientData: PatientEntry[] = data.map(p => {
-  const obj = toNewPatiententries(p) as PatientEntry;
-  obj.id = p.id;
+// const patientData: PatientEntry[] = data.map(p => {
+//   console.log(p);
+//   const obj = toNewPatiententries(p) as PatientEntry;
+//   obj.id = p.id;
 
-  return obj;
-});
+//   return obj;
+// });
 
-export default patientData;
+export default data;

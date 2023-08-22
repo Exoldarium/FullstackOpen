@@ -46,6 +46,7 @@ function toNewPatientEntry(object: unknown): NewPatientEntry {
     'occupation' in object &&
     'entries' in object
   ) {
+
     const newEntry: NewPatientEntry = {
       name: parseToString(object.name),
       dateOfBirth: parseDate(object.dateOfBirth),
