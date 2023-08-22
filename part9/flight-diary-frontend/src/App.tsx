@@ -14,10 +14,15 @@ export default function App() {
     })();
   }, []);
 
+
+  function addNewEntryOnSubmit(entry: DiaryEntry) {
+    setEntries(entries.concat(entry));
+  }
+
   return (
     <>
       <DiaryEntries entries={entries} />
-      <AddNewEntry />
+      <AddNewEntry addNewEntryOnSubmit={addNewEntryOnSubmit} />
     </>
   );
 }

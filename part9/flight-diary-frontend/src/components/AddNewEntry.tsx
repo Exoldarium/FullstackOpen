@@ -1,14 +1,18 @@
 import { useState } from "react";
 import { DiaryEntry, Visibility, Weather } from "../types"
-import parseDiaryEntry from "../utils";
+import { parseNewDiaryEntry } from "../utils";
+import diaryService from "../services/diaryService";
 
-export default function AddNewEntry() {
-  const [inputs, setInputs] = useState({
-    date: '',
-    visibility: '',
-    weather: '',
-    comment: ''
-  });
+interface AddNewDiaryEntry {
+  addNewEntryOnSubmit(arg: DiaryEntry): void;
+}
+
+export default function AddNewEntry({ addNewEntryOnSubmit }: AddNewDiaryEntry) {
+  const [visibility, setVisibility] = useState('');
+  const [weather, setWeather] = useState('');
+  const [date, setDate] = useState('');
+  const [comment, setComment] = useState('');
+  const [newEntry, setNewEntry] = useState({});
   const visibilityValues: string[] = Object.values(Visibility).map(v => v.toString());
   const weatherValues: string[] = Object.values(Weather).map(v => v.toString());
 
@@ -17,30 +21,37 @@ export default function AddNewEntry() {
     const { name, value, id } = e.target;
 
     if (name === 'visibility') {
-      setInputs({
-        ...inputs,
-        visibility: id
-      });
+      setVisibility(id);
     }
     if (name === 'weather') {
-      setInputs({
-        ...inputs,
-        weather: id
-      });
+      setWeather(id);
+    }
+    if (name === 'date') {
+      setDate(value);
+    }
+    if (name === 'comment') {
+      setComment(value);
     }
 
-    setInputs({
-      ...inputs,
-      [name]: value
-    })
+    setNewEntry({
+      visibility,
+      weather,
+      date,
+      comment
+    });
+  }
 
-    console.log(inputs)
+  async function addNewEntry(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const entry = parseNewDiaryEntry(newEntry);
+    const res = await diaryService.createNew(entry);
+    addNewEntryOnSubmit(res);
   }
 
   return (
     <>
       <h1>Add new entry</h1>
-      <form style={{ display: 'flex', flexDirection: 'column', width: '30vw' }}>
+      <form style={{ display: 'flex', flexDirection: 'column', width: '30vw' }} onSubmit={addNewEntry}>
         <label htmlFor="date">Date</label>
         <input type="date" name="date" onChange={handleInputs} />
         <div style={{ display: 'flex', flexDirection: 'row' }}>

@@ -1,17 +1,17 @@
 
-import { Weather, Visibility, DiaryEntry } from './types';
+import { Weather, Visibility, DiaryEntry, NewDiaryEntry } from './types';
 
 const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;
 };
 
-// const parseComment = (comment: unknown): string => {
-//   if (!isString(comment)) {
-//     throw new Error('Incorrect or missing comment');
-//   }
+const parseComment = (comment: unknown): string => {
+  if (!isString(comment)) {
+    throw new Error('Incorrect or missing comment');
+  }
 
-//   return comment;
-// };
+  return comment;
+};
 
 const isDate = (date: string): boolean => {
   return Boolean(Date.parse(date));
@@ -56,7 +56,7 @@ const parseId = (id: unknown): number => {
   return id;
 }
 
-const parseDiaryEntry = (object: unknown): DiaryEntry => {
+export const parseDiaryEntry = (object: unknown): DiaryEntry => {
   // console.log(object)
   if (!object || typeof object !== 'object') {
     throw new Error('Incorrect or missing data');
@@ -76,4 +76,21 @@ const parseDiaryEntry = (object: unknown): DiaryEntry => {
   throw new Error('Incorrect data: a field missing');
 };
 
-export default parseDiaryEntry;
+export const parseNewDiaryEntry = (object: unknown): NewDiaryEntry => {
+  if (!object || typeof object !== 'object') {
+    throw new Error('Incorrect or missing data');
+  }
+
+  if ('comment' in object && 'date' in object && 'weather' in object && 'visibility' in object) {
+    const newEntry: NewDiaryEntry = {
+      weather: parseWeather(object.weather),
+      visibility: parseVisibility(object.visibility),
+      date: parseDate(object.date),
+      comment: parseComment(object.comment)
+    };
+
+    return newEntry;
+  }
+
+  throw new Error('Incorrect data: a field missing');
+};

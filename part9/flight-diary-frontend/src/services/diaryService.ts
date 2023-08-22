@@ -1,6 +1,6 @@
 import axios from "axios";
-import parseDiaryEntry from "../utils";
-import { DiaryEntry } from "../types";
+import { parseDiaryEntry } from "../utils";
+import { NewDiaryEntry } from "../types";
 
 const baseUrl = 'http://localhost:3001/api';
 
@@ -16,7 +16,7 @@ async function getAll() {
   return arr;
 }
 
-async function createNew(newEntry: DiaryEntry) {
+async function createNew(newEntry: NewDiaryEntry) {
   const res = await axios.post(`${baseUrl}/diaries`, newEntry);
   const data = parseDiaryEntry(res.data);
 
