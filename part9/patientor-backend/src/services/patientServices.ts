@@ -5,13 +5,21 @@ import { v4 as uuidv4 } from 'uuid';
 const id: string = uuidv4();
 
 function getPatientEntries(): NonSensitivePatientEntry[] {
-  return patients.map(({ id, name, dateOfBirth, gender, occupation }) => ({
+  const allPatients = patients.map(({ id, name, dateOfBirth, gender, occupation }) => ({
     id,
     name,
     dateOfBirth,
     gender,
     occupation
   }));
+
+  return allPatients;
+}
+
+function getSinglePatient(patientId: string): PatientEntry[] {
+  const findPatient = patients.filter(patient => patient.id === patientId);
+
+  return findPatient;
 }
 
 function addNewPatientEntry(entry: NewPatientEntry): PatientEntry {
@@ -27,5 +35,6 @@ function addNewPatientEntry(entry: NewPatientEntry): PatientEntry {
 
 export default {
   getPatientEntries,
-  addNewPatientEntry
+  addNewPatientEntry,
+  getSinglePatient
 };

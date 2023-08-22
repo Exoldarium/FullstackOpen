@@ -39,7 +39,12 @@ function toNewPatientEntry(object: unknown): NewPatientEntry {
   if (!object || typeof object !== 'object') throw new Error('Incorrect or missing data');
 
   if (
-    'name' in object && 'dateOfBirth' in object && 'ssn' in object && 'gender' in object && 'occupation' in object
+    'name' in object &&
+    'dateOfBirth' in object &&
+    'ssn' in object &&
+    'gender' in object &&
+    'occupation' in object &&
+    'entries' in object
   ) {
     const newEntry: NewPatientEntry = {
       name: parseToString(object.name),
@@ -47,6 +52,7 @@ function toNewPatientEntry(object: unknown): NewPatientEntry {
       ssn: parseToString(object.ssn),
       gender: parseGender(object.gender),
       occupation: parseToString(object.occupation),
+      entries: []
     };
 
     return newEntry;
