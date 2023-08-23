@@ -1,0 +1,15 @@
+POST http://localhost:3001/api/patients/d2773336-f723-11e9-8f0b-362b9e155667/entries
+Content-Type: application/json
+
+{
+  "description": "test description",
+  "date": "1900-02-02",
+  "specialist": "test specialist",
+  "diagnosisCodes": ["ZH2344", "asfasf123"],
+  "employerName": "test employer",
+  "type": "Hospital",
+  "discharge": {
+    "date": "1900-02-02",
+    "criteria": "test criteria"
+  }
+}

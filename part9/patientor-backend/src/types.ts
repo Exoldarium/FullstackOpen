@@ -1,4 +1,4 @@
-interface BaseEntry {
+export interface BaseEntry {
   id: string;
   description: string;
   date: string;
@@ -30,13 +30,13 @@ interface HealthCheckEntry extends BaseEntry {
 
 interface OccupationalHealthcareEntry extends BaseEntry {
   type: "OccupationalHealthcare";
-  employerName: string;
+  employerName?: string;
   sickLeave?: SickLeaveData;
 }
 
 interface HospitalEntry extends BaseEntry {
   type: "Hospital";
-  discharge: DischargeData;
+  discharge?: DischargeData;
 }
 
 export type Entry =
@@ -69,3 +69,9 @@ export interface PatientEntry {
 export type NonSensitivePatientEntry = Omit<PatientEntry, 'ssn'>;
 
 export type NewPatientEntry = Omit<PatientEntry, 'id'>;
+
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
+
+export type NewEntry = UnionOmit<Entry, 'id'>;
+
+export type BaseEntryWithoutId = Omit<BaseEntry, 'id'>;

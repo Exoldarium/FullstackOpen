@@ -1,10 +1,10 @@
 import { Gender, NewPatientEntry } from "../src/types";
 
-function isString(text: unknown): text is string {
+export function isString(text: unknown): text is string {
   return typeof text === 'string' || text instanceof String;
 }
 
-function isDate(date: string): boolean {
+export function isDate(date: string): boolean {
   return Boolean(Date.parse(date));
 }
 
@@ -17,19 +17,19 @@ function isGender(param: string): param is Gender {
     .includes(param);
 }
 
-function parseToString(param: unknown): string {
+export function parseToString(param: unknown): string {
   if (!isString(param)) throw new Error('Invalid name input');
 
   return param;
 }
 
-function parseDate(date: unknown): string {
+export function parseDate(date: unknown): string {
   if (!isString(date) || !isDate(date)) throw new Error('Invalid date input');
 
   return date;
 }
 
-function parseGender(gender: unknown): Gender {
+export function parseGender(gender: unknown): Gender {
   if (!isString(gender) || !isGender(gender)) throw new Error('Invalid gender input');
 
   return gender;
@@ -38,15 +38,14 @@ function parseGender(gender: unknown): Gender {
 function toNewPatientEntry(object: unknown): NewPatientEntry {
   if (!object || typeof object !== 'object') throw new Error('Incorrect or missing data');
 
+  console.log(object);
   if (
     'name' in object &&
     'dateOfBirth' in object &&
     'ssn' in object &&
     'gender' in object &&
-    'occupation' in object &&
-    'entries' in object
+    'occupation' in object
   ) {
-
     const newEntry: NewPatientEntry = {
       name: parseToString(object.name),
       dateOfBirth: parseDate(object.dateOfBirth),
@@ -61,5 +60,4 @@ function toNewPatientEntry(object: unknown): NewPatientEntry {
 
   throw new Error('Incorrect data: some fields are missing');
 }
-
 export default toNewPatientEntry;
