@@ -16,7 +16,6 @@ function getPatientEntries(): PatientEntry[] {
     ssn
   }));
 
-  console.log(patients);
   return allPatients;
 }
 

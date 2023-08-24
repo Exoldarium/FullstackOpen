@@ -25,7 +25,7 @@ export interface SickLeaveData {
 
 interface HealthCheckEntry extends BaseEntry {
   type: "HealthCheck";
-  healthCheckRating: HealthCheckRating;
+  healthCheckRating?: HealthCheckRating;
 }
 
 interface OccupationalHealthcareEntry extends BaseEntry {

@@ -14,7 +14,7 @@ export default function HealthCheckType({ entry, diagnoses }: Props) {
         const findDiagnose = diagnoses?.filter(diagnose => diagnose.code === code);
 
         return <ul key={i}>
-          <li>{code}{findDiagnose[0].name}</li>
+          <li>{code}{findDiagnose[0]?.name}</li>
         </ul>
       })}
     </div>

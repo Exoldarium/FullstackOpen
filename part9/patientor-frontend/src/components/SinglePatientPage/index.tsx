@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Diagnosis, Entry, Patient } from "../../types";
 import HospitalType from "./HospitalType";
 import OccupationalHealthcareType from "./OccupationalHealthcareType";
 import HealthCheckType from "./HealthCheckType";
 import { assertNever } from "../../utils";
+import AddNewEntry from "../AddEntryForm";
 
 interface Props {
   patients: Patient[];
@@ -24,6 +26,7 @@ function entryType(entry: Entry, diagnoses: Diagnosis[]) {
 }
 
 export default function SinglePatientPage({ patients, diagnoses }: Props) {
+  const [newEntryActive, setNewEntryActive] = useState(false);
   const { id } = useParams();
 
   const findPatient = patients.filter(patient => patient.id === id)
@@ -35,6 +38,7 @@ export default function SinglePatientPage({ patients, diagnoses }: Props) {
       <h1>{patient?.name}</h1>
       <p>Gender: {patient?.gender}</p>
       <p>Occupation: {patient?.occupation}</p>
+      {newEntryActive && <AddNewEntry setNewEntryActive={setNewEntryActive} />}
       <h2>entries</h2>
       <div>
         {patient?.entries.map(entry => (
@@ -51,6 +55,7 @@ export default function SinglePatientPage({ patients, diagnoses }: Props) {
           </div>
         ))}
       </div>
+      <button type="button" onClick={() => setNewEntryActive(true)}>Add new entry</button>
     </>
   )
 }

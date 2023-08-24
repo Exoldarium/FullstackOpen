@@ -6,10 +6,6 @@ Content-Type: application/json
   "date": "1900-02-02",
   "specialist": "test specialist",
   "diagnosisCodes": ["ZH2344", "asfasf123"],
-  "employerName": "test employer",
-  "type": "Hospital",
-  "discharge": {
-    "date": "1900-02-02",
-    "criteria": "test criteria"
-  }
+  "type": "HealthCheck",
+  "healthCheckRating": 3
 }

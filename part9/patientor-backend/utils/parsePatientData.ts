@@ -38,7 +38,6 @@ export function parseGender(gender: unknown): Gender {
 function toNewPatientEntry(object: unknown): NewPatientEntry {
   if (!object || typeof object !== 'object') throw new Error('Incorrect or missing data');
 
-  console.log(object);
   if (
     'name' in object &&
     'dateOfBirth' in object &&
