@@ -19,7 +19,8 @@ function useForm(initialState: NewEntry) {
 
   return {
     inputs,
-    handleInputs
+    handleInputs,
+    setInputs
   }
 }
 

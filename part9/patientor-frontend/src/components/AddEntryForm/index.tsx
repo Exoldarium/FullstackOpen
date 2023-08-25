@@ -2,12 +2,15 @@ import { useState } from "react";
 import HealthCheckForm from "./HealthCheckForm";
 import OccupationalHealthcareForm from "./OccupationalHealthcareForm";
 import HospitalForm from "./HospitalForm";
+import { Patient } from "../../types";
 
 interface Props {
   setNewEntryActive: React.Dispatch<React.SetStateAction<boolean>>;
+  patients: Patient[];
+  setPatients: React.Dispatch<React.SetStateAction<Patient[]>>;
 }
 
-export default function AddNewEntry({ setNewEntryActive }: Props) {
+export default function AddNewEntry({ setNewEntryActive, patients, setPatients }: Props) {
   const entryTypes: string[] = ['HealthCheck', 'OccupationalHealthcare', 'Hospital'];
   const [selectedOption, setSelectedOption] = useState('HealthCheck');
 
@@ -25,9 +28,27 @@ export default function AddNewEntry({ setNewEntryActive }: Props) {
         ))}
       </select>
       <h2>{selectedOption} entry</h2>
-      {selectedOption === 'HealthCheck' && <HealthCheckForm setNewEntryActive={setNewEntryActive} />}
-      {selectedOption === 'OccupationalHealthcare' && <OccupationalHealthcareForm setNewEntryActive={setNewEntryActive} />}
-      {selectedOption === 'Hospital' && <HospitalForm setNewEntryActive={setNewEntryActive} />}
+      {selectedOption === 'HealthCheck' &&
+        <HealthCheckForm
+          setNewEntryActive={setNewEntryActive}
+          patients={patients}
+          setPatients={setPatients}
+        />
+      }
+      {selectedOption === 'OccupationalHealthcare' &&
+        <OccupationalHealthcareForm
+          setNewEntryActive={setNewEntryActive}
+          patients={patients}
+          setPatients={setPatients}
+        />
+      }
+      {selectedOption === 'Hospital' &&
+        <HospitalForm
+          setNewEntryActive={setNewEntryActive}
+          patients={patients}
+          setPatients={setPatients}
+        />
+      }
     </div>
   )
 }

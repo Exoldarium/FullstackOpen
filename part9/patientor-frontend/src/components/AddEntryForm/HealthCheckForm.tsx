@@ -2,12 +2,15 @@ import { useParams } from "react-router-dom";
 import useForm from "../../hooks/useForm";
 import patientService from '../../services/patients';
 import { parseToString } from "../../utils";
+import { Patient } from "../../types";
 
 interface Props {
   setNewEntryActive: React.Dispatch<React.SetStateAction<boolean>>;
+  patients: Patient[];
+  setPatients: React.Dispatch<React.SetStateAction<Patient[]>>;
 }
 
-export default function HealthCheckForm({ setNewEntryActive }: Props) {
+export default function HealthCheckForm({ setNewEntryActive, patients, setPatients }: Props) {
   const { id } = useParams();
   const { inputs, handleInputs } = useForm({
     description: '',
@@ -18,20 +21,24 @@ export default function HealthCheckForm({ setNewEntryActive }: Props) {
     diagnosisCodes: []
   });
 
-
   async function addNewEntry(e: React.SyntheticEvent) {
     e.preventDefault();
+
     const string = inputs.diagnosisCodes?.toString();
     const arr = string?.split(' ');
-    const entries = {
+    const newEntry = {
       ...inputs,
       diagnosisCodes: arr
     }
-
     const parsedId = parseToString(id);
 
-    await patientService.addEntry(entries, parsedId);
+    const data = await patientService.addEntry(newEntry, parsedId);
+    patients.filter(patient => patient.id === parsedId)[0].entries.concat(data);
+    const newPatients = await patientService.getAll()
+    setPatients(newPatients);
+    setNewEntryActive(false);
   }
+
 
   return (
     <form

@@ -10,6 +10,7 @@ import AddNewEntry from "../AddEntryForm";
 interface Props {
   patients: Patient[];
   diagnoses: Diagnosis[];
+  setPatients: React.Dispatch<React.SetStateAction<Patient[]>>;
 }
 
 function entryType(entry: Entry, diagnoses: Diagnosis[]) {
@@ -25,7 +26,7 @@ function entryType(entry: Entry, diagnoses: Diagnosis[]) {
   }
 }
 
-export default function SinglePatientPage({ patients, diagnoses }: Props) {
+export default function SinglePatientPage({ patients, diagnoses, setPatients }: Props) {
   const [newEntryActive, setNewEntryActive] = useState(false);
   const { id } = useParams();
 
@@ -38,7 +39,12 @@ export default function SinglePatientPage({ patients, diagnoses }: Props) {
       <h1>{patient?.name}</h1>
       <p>Gender: {patient?.gender}</p>
       <p>Occupation: {patient?.occupation}</p>
-      {newEntryActive && <AddNewEntry setNewEntryActive={setNewEntryActive} />}
+      {newEntryActive &&
+        <AddNewEntry
+          setNewEntryActive={setNewEntryActive}
+          patients={patients}
+          setPatients={setPatients}
+        />}
       <h2>entries</h2>
       <div>
         {patient?.entries.map(entry => (
