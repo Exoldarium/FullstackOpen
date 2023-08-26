@@ -1,5 +1,5 @@
 import { Image, StyleSheet, Text, View } from "react-native"
-import { format } from "../utils";
+import { format } from "../utils/utils";
 import theme from "../theme";
 
 const styles = StyleSheet.create({
@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
 });
 
 const RepositoryItem = ({ item }) => {
+  console.log(item);
   return (
     <View style={styles.mainDiv}>
       <View style={styles.topDiv}>
