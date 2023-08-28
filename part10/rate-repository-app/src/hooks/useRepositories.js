@@ -10,7 +10,7 @@ const useRepositories = () => {
     fetchPolicy: 'cache-and-network'
   });
 
-  const repositories = data.repositories;
+  const repositories = data?.repositories;
 
   // const fetchRepositories = async () => {
   //   setLoading(true);

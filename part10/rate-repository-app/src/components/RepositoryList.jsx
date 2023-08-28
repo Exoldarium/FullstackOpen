@@ -19,8 +19,7 @@ const renderItem = (props) => (
 );
 
 const RepositoryList = () => {
-  const { repositories, loading } = useRepositories();
-  console.log(repositories, loading);
+  const { repositories } = useRepositories();
 
   // Get the nodes from the edges array
   const repositoryNodes = repositories

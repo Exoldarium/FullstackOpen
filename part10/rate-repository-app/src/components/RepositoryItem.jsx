@@ -1,5 +1,5 @@
 import { Image, StyleSheet, Text, View } from "react-native"
-import { format } from "../utils/utils";
+// import { format } from "../utils/utils";
 import theme from "../theme";
 
 const styles = StyleSheet.create({
@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
 });
 
 const RepositoryItem = ({ item }) => {
-  console.log(item);
   return (
     <View style={styles.mainDiv}>
       <View style={styles.topDiv}>
@@ -62,8 +61,8 @@ const RepositoryItem = ({ item }) => {
       </View>
       <Text style={styles.language}>{item.language}</Text>
       <View style={styles.bottomDiv}>
-        <Text style={{ padding: 3 }}>Stars {format(item.stargazersCount)}</Text>
-        <Text style={{ padding: 3 }}>Forks {format(item.forksCount)}</Text>
+        <Text style={{ padding: 3 }}>Stars {item.stargazersCount}</Text>
+        <Text style={{ padding: 3 }}>Forks {item.forksCount}</Text>
         <Text style={{ padding: 3 }}>Reviews {item.reviewCount}</Text>
         <Text style={{ padding: 3 }}>Rating {item.ratingAverage}</Text>
       </View>
