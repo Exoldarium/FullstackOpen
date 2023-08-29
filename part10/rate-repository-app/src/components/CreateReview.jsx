@@ -2,44 +2,36 @@ import { Button, Text, TextInput, View } from "react-native";
 import { styles } from "./SignIn";
 import { Formik } from "formik";
 import * as yup from 'yup';
-import { useMutation } from "@apollo/client";
-import { REVIEW_MUTATION } from "../graphql/mutations";
+import useCreateReview from "../hooks/useCreateReview";
+import { useNavigate } from "react-router-native";
 
 const loginValidationSchema = yup.object().shape({
-  repoOwner: yup
+  ownerName: yup
     .string()
     .required('Repository Owner is Required'),
-  repoName: yup
+  repositoryName: yup
     .string()
     .required('Repository name is required'),
-  repoRating: yup
+  rating: yup
     .number()
     .min(1, `Rating must be between 0 and 100`)
     .max(100, `Rating must be between 0 and 100`)
     .required('Repository rating is required'),
-  repoReview: yup
+  text: yup
     .string()
 });
 
 export default function CreateReview() {
-  const [submitReview] = useMutation(REVIEW_MUTATION);
+  const navigate = useNavigate();
+  const [create, result] = useCreateReview();
 
   const submitReviewOnPress = async (values) => {
-    const valuesToSubmit = {
-      ownerName: values.repoOwner,
-      rating: Number(values.repoRating),
-      repositoryName: values.repoName,
-      text: values.repoReview
-    }
-    console.log(valuesToSubmit)
+    const { ownerName, rating, repositoryName, text } = values;
+
     try {
-      const res = await submitReview({
-        fetchPolicy: 'cache-and-network',
-        variables: {
-          valuesToSubmit
-        }
-      });
-      console.log(res);
+      await create({ ownerName, rating, repositoryName, text });
+      console.log(result);
+      navigate(`${result?.createReview?.repositoryId}`)
     } catch (e) {
       console.log(e);
     }
@@ -61,46 +53,46 @@ export default function CreateReview() {
         {({ handleChange, handleBlur, handleSubmit, values, errors, isValid }) => (
           <>
             <TextInput
-              name="repoOwner"
+              name="ownerName"
               placeholder="Repository Owner"
               style={styles.textInput}
-              onChangeText={handleChange('repoOwner')}
-              onBlur={handleBlur('repoOwner')}
-              value={values.repoOwner}
-              keyboardType="repoOwner"
+              onChangeText={handleChange('ownerName')}
+              onBlur={handleBlur('ownerName')}
+              value={values.ownerName}
+              keyboardType="ownerName"
             />
-            {errors.repoOwner &&
-              <Text style={{ fontSize: 10, color: 'red' }}>{errors.repoOwner}</Text>
+            {errors.ownerName &&
+              <Text style={{ fontSize: 10, color: 'red' }}>{errors.ownerName}</Text>
             }
             <TextInput
-              name="repoName"
+              name="repositoryName"
               placeholder="Repository name"
               style={styles.textInput}
-              onChangeText={handleChange('repoName')}
-              onBlur={handleBlur('repoName')}
-              value={values.repoName}
+              onChangeText={handleChange('repositoryName')}
+              onBlur={handleBlur('repositoryName')}
+              value={values.repositoryName}
             />
-            {errors.repoName &&
-              <Text style={{ fontSize: 10, color: 'red' }}>{errors.repoName}</Text>
+            {errors.repositoryName &&
+              <Text style={{ fontSize: 10, color: 'red' }}>{errors.repositoryName}</Text>
             }
             <TextInput
-              name="repoRating"
+              name="rating"
               placeholder="Repository rating"
               style={styles.textInput}
-              onChangeText={handleChange('repoRating')}
-              onBlur={handleBlur('repoRating')}
-              value={values.repoRating}
+              onChangeText={handleChange('rating')}
+              onBlur={handleBlur('rating')}
+              value={values.rating}
             />
-            {errors.repoRating &&
-              <Text style={{ fontSize: 10, color: 'red' }}>{errors.repoRating}</Text>
+            {errors.rating &&
+              <Text style={{ fontSize: 10, color: 'red' }}>{errors.rating}</Text>
             }
             <TextInput
-              name="repoReview"
+              name="text"
               placeholder="Repository review"
               style={styles.textInput}
-              onChangeText={handleChange('repoReview')}
-              onBlur={handleBlur('repoReview')}
-              value={values.repoReview}
+              onChangeText={handleChange('text')}
+              onBlur={handleBlur('text')}
+              value={values.text}
               multiline
             />
             <Button onPress={handleSubmit} title="Submit" disabled={!isValid} />
