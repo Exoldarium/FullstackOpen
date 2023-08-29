@@ -2,10 +2,9 @@ import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { Formik } from "formik";
 import * as yup from 'yup';
 import useSignIn from "../hooks/useSignIn";
-// import { useEffect } from "react";
-// import AuthStorage from "../utils/authStorage";
+import { useNavigate } from "react-router-native";
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   loginContainer: {
     width: '80%',
     alignItems: 'center',
@@ -35,6 +34,7 @@ const loginValidationSchema = yup.object().shape({
 })
 
 const SignIn = () => {
+  const navigate = useNavigate();
   const [signIn] = useSignIn();
 
   const onSubmit = async (values) => {
@@ -42,22 +42,11 @@ const SignIn = () => {
 
     try {
       await signIn({ username, password });
-      // console.log(res);
+      navigate("/");
     } catch (e) {
       console.log(e)
     }
   };
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const newToken = new AuthStorage('addNewToken');
-
-  //     await newToken.setAccessToken(result?.data?.authenticate?.accessToken)
-  //     const token = await newToken.getAccessToken();
-  //     await newToken.removeAccessToken();
-  //     console.log(token);
-  //   })();
-  // });
 
   return (
     <View style={styles.loginContainer}>

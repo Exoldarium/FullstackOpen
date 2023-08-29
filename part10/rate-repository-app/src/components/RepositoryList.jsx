@@ -11,14 +11,14 @@ const styles = StyleSheet.create({
 const ItemSeparator = () => <View style={styles.separator} />;
 
 const renderItem = (props) => (
-  <View>
+  <View testID="repositoryItem">
     <RepositoryItem
       {...props}
     />
   </View>
 );
 
-const RepositoryList = () => {
+export const RepositoryListContainer = () => {
   const { repositories } = useRepositories();
 
   // Get the nodes from the edges array
@@ -33,6 +33,12 @@ const RepositoryList = () => {
       renderItem={renderItem}
     />
   );
+};
+
+const RepositoryList = () => {
+  const { repositories } = useRepositories();
+
+  return <RepositoryListContainer repositories={repositories} />;
 };
 
 export default RepositoryList;

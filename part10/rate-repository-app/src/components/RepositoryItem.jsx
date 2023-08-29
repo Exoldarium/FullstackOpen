@@ -1,8 +1,9 @@
 import { Image, StyleSheet, Text, View } from "react-native"
-// import { format } from "../utils/utils";
 import theme from "../theme";
+import { Link } from "react-router-native";
+import SingleRepository from "./SingleRepository";
 
-const styles = StyleSheet.create({
+export const repoStyles = StyleSheet.create({
   container: {
     paddingTop: 50,
   },
@@ -46,27 +47,32 @@ const styles = StyleSheet.create({
 
 const RepositoryItem = ({ item }) => {
   return (
-    <View style={styles.mainDiv}>
-      <View style={styles.topDiv}>
-        <Image
-          style={styles.tinyLogo}
-          source={{
-            uri: `${item.ownerAvatarUrl}`,
-          }}
-        />
-        <View style={styles.nameDiv}>
-          <Text>{item.fullName}</Text>
-          <Text>{item.description}</Text>
+    <>
+      <Link to={`/${item.id}`}>
+        <View style={repoStyles.mainDiv}>
+          <View style={repoStyles.topDiv}>
+            <Image
+              style={repoStyles.tinyLogo}
+              source={{
+                uri: `${item.ownerAvatarUrl}`,
+              }}
+            />
+            <View style={repoStyles.nameDiv}>
+              <Text>{item.fullName}</Text>
+              <Text>{item.description}</Text>
+            </View>
+          </View>
+          <Text style={repoStyles.language}>{item.language}</Text>
+          <View style={repoStyles.bottomDiv}>
+            <Text style={{ padding: 3 }}>Stars {item.stargazersCount}</Text>
+            <Text style={{ padding: 3 }}>Forks {item.forksCount}</Text>
+            <Text style={{ padding: 3 }}>Reviews {item.reviewCount}</Text>
+            <Text style={{ padding: 3 }}>Rating {item.ratingAverage}</Text>
+          </View>
         </View>
-      </View>
-      <Text style={styles.language}>{item.language}</Text>
-      <View style={styles.bottomDiv}>
-        <Text style={{ padding: 3 }}>Stars {item.stargazersCount}</Text>
-        <Text style={{ padding: 3 }}>Forks {item.forksCount}</Text>
-        <Text style={{ padding: 3 }}>Reviews {item.reviewCount}</Text>
-        <Text style={{ padding: 3 }}>Rating {item.ratingAverage}</Text>
-      </View>
-    </View>
+      </Link>
+      <SingleRepository />
+    </>
   )
 }
 
