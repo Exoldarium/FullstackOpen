@@ -48,9 +48,15 @@ const AppBar = () => {
               <Text style={styles.menuDiv} onPress={signOut}>Sign out</Text>
             </>
             :
-            <Link to='/signin'>
-              <Text style={styles.menuDiv}>Sign in</Text>
-            </Link>}
+            <>
+              <Link to='/signin'>
+                <Text style={styles.menuDiv}>Sign in</Text>
+              </Link>
+              <Link to='/signup'>
+                <Text style={styles.menuDiv}>Sign up</Text>
+              </Link>
+            </>
+          }
         </ScrollView>
       </View>
     </Pressable >

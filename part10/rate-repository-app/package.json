@@ -26,7 +26,8 @@
     "react-native": "0.70.8",
     "react-native-web": "~0.18.9",
     "react-router-native": "^6.15.0",
-    "yup": "^1.2.0"
+    "yup": "^1.2.0",
+    "@react-native-picker/picker": "2.4.8"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
