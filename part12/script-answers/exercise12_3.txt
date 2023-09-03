@@ -1,0 +1,6 @@
+cd usr
+cd src
+mkdir app
+cd app
+touch index.js
+console.log('Hello world!');
