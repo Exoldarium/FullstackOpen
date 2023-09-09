@@ -1,14 +1,7 @@
 require('dotenv').config();
-const { DataTypes, Sequelize } = require('sequelize');
+const { DataTypes } = require('sequelize');
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false
-    }
-  },
-});
+const { sequelize } = require('../../utils/db');
 
 const Blog = sequelize.define('Blog', {
   id: {
