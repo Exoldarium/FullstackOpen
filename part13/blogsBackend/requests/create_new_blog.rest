@@ -1,8 +1,10 @@
-POST http://localhost:3001/api/blogs HTTP/1.1
+POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkR1c2FuIiwiaWQiOjEsImlhdCI6MTY5NDM0MjMwM30.rEleByWWKYY34NwVv05jIRgjPlwxcVZDW_TXFaQGG14
 
 {
-  "url": "postrequest.com",
-  "title": "post request title",
-  "likes": 10
+  "url": "tokenpostrequest.com",
+  "title": "testing auth",
+  "likes": 15,
+  "author": "Dusan"
 }

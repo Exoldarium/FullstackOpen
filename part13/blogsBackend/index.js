@@ -6,6 +6,8 @@ const { PORT } = require('./utils/config')
 const { connectToDatabase } = require('./utils/db');
 
 const blogRouter = require('./src/controllers/blogRouter');
+const userRouter = require('./src/controllers/userRouter');
+const loginRouter = require('./src/controllers/loginRouter');
 
 app.use('/api/ping', async (req, res) => {
   console.log('someone pinged here');
@@ -13,6 +15,8 @@ app.use('/api/ping', async (req, res) => {
 });
 
 app.use('/api/blogs', blogRouter);
+app.use('/api/users', userRouter);
+app.use('/api/login', loginRouter);
 
 app.listen(PORT, async () => {
   await connectToDatabase();
