@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { SECRET } = require('./config');
+const { User } = require('../src/models');
 
 const errorHandler = (error, res, req, next) => {
   console.error(error);
@@ -27,7 +28,21 @@ const tokenExtractor = (req, res, next) => {
   next();
 }
 
+const getUser = async (req, res, next) => {
+  const token = req.decodedToken;
+  console.log(token)
+
+  if (!token.id) {
+    return res.status(401).json({ error: 'token missing' });
+  }
+
+  const user = await User.findByPk(token.id);
+  req.user = user;
+  next();
+}
+
 module.exports = {
   errorHandler,
-  tokenExtractor
+  tokenExtractor,
+  getUser
 }

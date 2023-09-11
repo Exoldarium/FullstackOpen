@@ -1,0 +1,7 @@
+PUT http://localhost:3001/api/users/Dusan
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkR1c2FuIiwiaWQiOjMsImlhdCI6MTY5NDQzNDc5MX0.K62P16qKWy_5XXry4wUBtP1PtZu6rAdz96Fb9AJrU58
+
+{
+  "username": "DusanUpdated"
+}

@@ -1,10 +1,10 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkR1c2FuIiwiaWQiOjEsImlhdCI6MTY5NDM0MjMwM30.rEleByWWKYY34NwVv05jIRgjPlwxcVZDW_TXFaQGG14
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkR1c2FuVXBkYXRlZCIsImlkIjozLCJpYXQiOjE2OTQ0NDE4NjZ9.PpQffpBaSUldiR2l7RG8T1_CRPUSljWVvOegXOmiP-w
 
 {
-  "url": "tokenpostrequest.com",
-  "title": "testing auth",
-  "likes": 15,
+  "url": "testing.com",
+  "title": "heyoo",
+  "likes": 10,
   "author": "Dusan"
 }

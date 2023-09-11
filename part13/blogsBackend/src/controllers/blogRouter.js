@@ -10,7 +10,13 @@ const blogFinder = async (req, res, next) => {
 };
 
 blogRouter.get('/', async (req, res) => {
-  const blogs = await Blog.findAll();
+  const blogs = await Blog.findAll({
+    attributes: { exclude: ['userId'] },
+    include: {
+      model: User,
+      attributes: ['name']
+    }
+  });
   res.json(blogs);
 });
 
@@ -19,11 +25,16 @@ blogRouter.post('/', tokenExtractor, async (req, res) => {
     const user = await User.findByPk(req.decodedToken.id);
     const blog = await Blog.create({
       ...req.body,
+      // sequelize will automatically create userId from user_id in postgres for us when we define relationships in our schema
+      // as we have defined a one-to-many relationship of user to blogs userId is created here
+      // we can also create it manualy but that is not necessary
       userId: user.id
     });
 
-    res.send(blog);
-    res.sendStatus(200);
+    console.log(JSON.stringify(user));
+    console.log(JSON.stringify(blog));
+
+    res.json(blog);
   } catch (error) {
     return res.status(400).json({ error });
   }
@@ -31,8 +42,7 @@ blogRouter.post('/', tokenExtractor, async (req, res) => {
 
 blogRouter.get('/:id', blogFinder, async (req, res, next) => {
   try {
-    res.json(req.blog);
-    res.sendStatus(200);
+    res.status(200).json(req.blog);
   } catch (error) {
     next(err);
   }
@@ -47,21 +57,26 @@ blogRouter.put('/:id', blogFinder, async (req, res, next) => {
       author,
       title,
       likes
-    })
+    });
 
     await req.blog.save();
-    res.json(req.blog);
-    res.sendStatus(201);
+    res.status(201).json(req.blog);
   } catch (error) {
     next(error);
   }
 });
 
-blogRouter.delete('/:id', blogFinder, async (req, res) => {
+blogRouter.delete('/:id', tokenExtractor, blogFinder, async (req, res) => {
   try {
-    await req.blog.destroy();
+    const user = await User.findByPk(req.decodedToken.id);
+    const blog = req.blog;
 
-    res.sendStatus(204);
+    if (user.id !== blog.userId) {
+      return res.status(400).json({ error: "Permission required" });
+    }
+
+    await req.blog.destroy();
+    res.status(204);
   } catch (error) {
     res.status(400).json({ error });
   }

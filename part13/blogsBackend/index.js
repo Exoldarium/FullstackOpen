@@ -4,6 +4,7 @@ app.use(express.json())
 
 const { PORT } = require('./utils/config')
 const { connectToDatabase } = require('./utils/db');
+const { tokenExtractor } = require('./utils/middleware');
 
 const blogRouter = require('./src/controllers/blogRouter');
 const userRouter = require('./src/controllers/userRouter');
