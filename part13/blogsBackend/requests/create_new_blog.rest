@@ -1,10 +1,10 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkR1c2FuVXBkYXRlZCIsImlkIjozLCJpYXQiOjE2OTQ0NDE4NjZ9.PpQffpBaSUldiR2l7RG8T1_CRPUSljWVvOegXOmiP-w
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRhcm4iLCJpZCI6NCwiaWF0IjoxNjk0NTAxMTg4fQ.Uzdf9BHoI93ncZXnDE-mJkW9JQjxXi3padIRTRqYncM
 
 {
-  "url": "testing.com",
-  "title": "heyoo",
-  "likes": 10,
-  "author": "Dusan"
+  "url": "welovecats.com",
+  "title": "petsssss",
+  "likes": 35,
+  "author": "Tarn"
 }

@@ -4,11 +4,11 @@ app.use(express.json())
 
 const { PORT } = require('./utils/config')
 const { connectToDatabase } = require('./utils/db');
-const { tokenExtractor } = require('./utils/middleware');
 
 const blogRouter = require('./src/controllers/blogRouter');
 const userRouter = require('./src/controllers/userRouter');
 const loginRouter = require('./src/controllers/loginRouter');
+const authorRouter = require('./src/controllers/authorRouter');
 
 app.use('/api/ping', async (req, res) => {
   console.log('someone pinged here');
@@ -18,6 +18,7 @@ app.use('/api/ping', async (req, res) => {
 app.use('/api/blogs', blogRouter);
 app.use('/api/users', userRouter);
 app.use('/api/login', loginRouter);
+app.use('/api/authors', authorRouter);
 
 app.listen(PORT, async () => {
   await connectToDatabase();

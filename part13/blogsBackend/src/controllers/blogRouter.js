@@ -1,6 +1,7 @@
 const express = require('express');
 const blogRouter = express.Router();
 
+const { Op } = require('sequelize');
 const { Blog, User } = require('../models');
 const { tokenExtractor } = require('../../utils/middleware');
 
@@ -10,13 +11,31 @@ const blogFinder = async (req, res, next) => {
 };
 
 blogRouter.get('/', async (req, res) => {
+  // we initialize an empty where query so that seqeuelize doesn't initiate where query if we are just making request for blogs
+  let where = {};
+
+  if (req.query.search) {
+    // we check that both author or title match the query
+    where = {
+      [Op.or]: [
+        { title: { [Op.substring]: req.query.search } },
+        { author: { [Op.substring]: req.query.search } }
+      ]
+    }
+  }
+
   const blogs = await Blog.findAll({
     attributes: { exclude: ['userId'] },
     include: {
       model: User,
       attributes: ['name']
-    }
+    },
+    order: [
+      ['likes', 'DESC']
+    ],
+    where
   });
+
   res.json(blogs);
 });
 
