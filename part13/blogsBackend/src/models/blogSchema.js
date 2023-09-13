@@ -24,6 +24,12 @@ const Blog = sequelize.define('blog', {
     type: DataTypes.INTEGER,
     defaultValue: 0
   },
+  year: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    isAfter: 1991,
+    isBefore: 2023,
+  }
 }, {
   sequelize,
   underscored: true,

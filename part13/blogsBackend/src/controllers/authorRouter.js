@@ -1,7 +1,7 @@
 const express = require('express');
 const authorRouter = express.Router();
 
-const { Blog, User } = require('../models');
+const { Blog } = require('../models');
 const { sequelize } = require('../../utils/db');
 
 authorRouter.get('/', async (req, res, next) => {
@@ -11,7 +11,6 @@ authorRouter.get('/', async (req, res, next) => {
         'author',
         [sequelize.fn('COUNT', sequelize.col('title')), 'articles'],
         [sequelize.fn('SUM', sequelize.col('likes')), 'likes'],
-        // { order: ['likes', 'DESC'] }
       ],
       order: [['likes', 'ASC']],
       group: 'author'

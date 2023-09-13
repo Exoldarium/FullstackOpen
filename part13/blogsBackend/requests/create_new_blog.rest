@@ -1,10 +1,11 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRhcm4iLCJpZCI6NCwiaWF0IjoxNjk0NTAxMTg4fQ.Uzdf9BHoI93ncZXnDE-mJkW9JQjxXi3padIRTRqYncM
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImR1c2FuQHRlc3QuY29tIiwiaWQiOjEsImlhdCI6MTY5NDYwMzA3OH0.GQHFJo0XPsW3H2sA_NRLHyyfZ0S8Uvf1_0H-kutEZ1g
 
 {
   "url": "welovecats.com",
   "title": "petsssss",
   "likes": 35,
-  "author": "Tarn"
+  "author": "Dusan",
+  "year": "1800-11-05"
 }

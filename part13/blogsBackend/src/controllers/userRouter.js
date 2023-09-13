@@ -24,6 +24,7 @@ userRouter.get('/', async (req, res, next) => {
 
     res.status(200).json(users);
   } catch (error) {
+    console.log(error);
     next(error);
   }
 });
@@ -35,6 +36,7 @@ userRouter.post('/', async (req, res, next) => {
 
     res.status(200).json(user);
   } catch (error) {
+    console.log(error);
     next(error);
   }
 });
