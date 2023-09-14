@@ -27,8 +27,6 @@ const Blog = sequelize.define('blog', {
   year: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    isAfter: 1991,
-    isBefore: 2023,
   }
 }, {
   sequelize,
@@ -36,6 +34,5 @@ const Blog = sequelize.define('blog', {
   timestamps: false,
   modelName: 'blog'
 });
-Blog.sync();
 
 module.exports = Blog;
