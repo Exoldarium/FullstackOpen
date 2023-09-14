@@ -1,11 +1,11 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImR1c2FuQHRlc3QuY29tIiwiaWQiOjEsImlhdCI6MTY5NDY3NzAzM30.DkAOsHfbcg2pfsjNR1RRuopsHenp3HsdKicM0zK6KNo
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImR1c2FuQHRlc3QuY29tIiwiaWQiOjEsImlhdCI6MTY5NDY4NzA4NH0.hdULc5R3QzmTn73mI0Bqlpo2pRIybSGY0ye9hRuZ2A0
 
 {
-  "url": "welovecats.com",
-  "title": "petsssss",
-  "likes": 35,
+  "url": "catsrule.com",
+  "title": "catsssss",
+  "likes": 40,
   "author": "Dusan",
-  "year": 2024
+  "year": 1992
 }

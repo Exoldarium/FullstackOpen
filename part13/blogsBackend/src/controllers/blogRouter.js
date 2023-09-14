@@ -46,11 +46,11 @@ blogRouter.get('/', async (req, res) => {
 blogRouter.post('/', tokenExtractor, async (req, res) => {
   const { year } = req.body;
 
-  try {
-    if (year < 1991 || year > 2023) {
-      return res.status(400).json({ error: "must enter a year after 1991 and before 2023" });
-    }
+  if (year < 1991 || year > 2023) {
+    return res.status(400).json({ error: "must enter a year after 1991 and before 2023" });
+  }
 
+  try {
     const user = await User.findByPk(req.decodedToken.id);
     const blog = await Blog.create({
       ...req.body,

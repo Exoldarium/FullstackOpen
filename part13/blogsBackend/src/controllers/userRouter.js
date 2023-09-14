@@ -1,10 +1,19 @@
 const userRouter = require('express').Router();
 
-const { User, Blog } = require('../models');
+const { User, Blog, Reading } = require('../models');
 const { tokenExtractor } = require('../../utils/middleware');
 
 const userFinder = async (req, res, next) => {
-  req.user = await User.findByPk(req.params.id);
+  req.user = await User.findByPk(req.params.id, {
+    attributes: ['name', 'username'],
+    include: {
+      model: Blog,
+      attributes: { exclude: ['userId'] },
+      through: {
+        attributes: ['read', 'id']
+      }
+    }
+  });
   next();
 };
 
@@ -43,7 +52,13 @@ userRouter.post('/', async (req, res, next) => {
 
 userRouter.get('/:id', userFinder, async (req, res, next) => {
   try {
-    res.status(200).json(req.user);
+    const { username, name, blogs } = req.user;
+
+    res.status(200).json({
+      username,
+      name,
+      readings: blogs
+    });
   } catch (error) {
     next(error);
   }
