@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { SECRET } = require('./config');
-const { User, Blog } = require('../src/models');
+const { User, Blog, Session } = require('../src/models');
 const { Op } = require('sequelize');
 
 const errorHandler = (error, res, req, next) => {
@@ -59,7 +59,13 @@ const getUser = async (req, res, next) => {
   }
 
   const user = await User.findByPk(decodedToken.id);
+  const session = await Session.findOne({
+    where: {
+      userId: decodedToken.id
+    }
+  })
   req.user = user;
+  req.session = session;
   next();
   return;
 }
@@ -68,5 +74,5 @@ module.exports = {
   errorHandler,
   tokenExtractor,
   getUser,
-  userFinder
+  userFinder,
 }

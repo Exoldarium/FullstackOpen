@@ -1,8 +1,7 @@
 const userRouter = require('express').Router();
 
-const { User, Blog, Reading } = require('../models');
+const { User, Blog, Session } = require('../models');
 const { getUser, userFinder } = require('../../utils/middleware');
-const { Op } = require('sequelize');
 
 const usernameFinder = async (req, res, next) => {
   req.username = await User.findOne({ username: req.params.username });
@@ -15,6 +14,10 @@ userRouter.get('/', async (req, res, next) => {
       include: {
         model: Blog,
         attributes: { exclude: ['userId'] },
+      },
+      include: {
+        model: Session,
+        attributes: ['active']
       }
     });
 
