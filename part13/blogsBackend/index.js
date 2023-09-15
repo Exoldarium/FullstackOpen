@@ -10,11 +10,14 @@ const userRouter = require('./src/controllers/userRouter');
 const loginRouter = require('./src/controllers/loginRouter');
 const authorRouter = require('./src/controllers/authorRouter');
 const readingListRouter = require('./src/controllers/readingListRouter');
+const { tokenExtractor } = require('./utils/middleware');
 
 app.use('/api/ping', async (req, res) => {
   console.log('someone pinged here');
   res.send('pong');
 });
+
+app.use(tokenExtractor);
 
 app.use('/api/blogs', blogRouter);
 app.use('/api/users', userRouter);

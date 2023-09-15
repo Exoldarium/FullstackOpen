@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { SECRET } = require('./config');
-const { User } = require('../src/models');
+const { User, Blog } = require('../src/models');
+const { Op } = require('sequelize');
 
 const errorHandler = (error, res, req, next) => {
   console.error(error);
@@ -12,37 +13,60 @@ const errorHandler = (error, res, req, next) => {
   next(error);
 }
 
+const userFinder = async (req, res, next) => {
+  let where = {};
+
+  // filter readings based on read value
+  if (req.query.read) {
+    where = {
+      read: { [Op.eq]: req.query.read }
+    }
+  }
+
+  req.oneUser = await User.findByPk(req.params.id, {
+    attributes: ['name', 'username'],
+    include: {
+      model: Blog,
+      attributes: { exclude: ['userId'] },
+      through: {
+        attributes: ['read', 'id'],
+        where
+      }
+    },
+  });
+  next();
+};
+
 const tokenExtractor = (req, res, next) => {
   const auth = req.get('authorization');
 
   if (auth && auth.toLowerCase().startsWith('bearer ')) {
-    try {
-      req.decodedToken = jwt.verify(auth.substring(7), SECRET);
-    } catch {
-      return res.status(401).json({ error: 'token invalid' });
-    }
-  } else {
-    return res.status(401).json({ error: 'token missing' });
+    req.token = auth.substring(7);
+
+    next();
+    return;
   }
 
   next();
+  return null;
 }
 
 const getUser = async (req, res, next) => {
-  const token = req.decodedToken;
-  console.log(token)
+  const decodedToken = jwt.verify(req.token, SECRET);
 
-  if (!token.id) {
-    return res.status(401).json({ error: 'token missing' });
+  if (!decodedToken.id) {
+    return res.status(401).json({ error: 'invalid token' });
   }
 
-  const user = await User.findByPk(token.id);
+  const user = await User.findByPk(decodedToken.id);
   req.user = user;
   next();
+  return;
 }
 
 module.exports = {
   errorHandler,
   tokenExtractor,
-  getUser
+  getUser,
+  userFinder
 }

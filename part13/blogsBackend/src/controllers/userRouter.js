@@ -1,21 +1,8 @@
 const userRouter = require('express').Router();
 
 const { User, Blog, Reading } = require('../models');
-const { tokenExtractor } = require('../../utils/middleware');
-
-const userFinder = async (req, res, next) => {
-  req.user = await User.findByPk(req.params.id, {
-    attributes: ['name', 'username'],
-    include: {
-      model: Blog,
-      attributes: { exclude: ['userId'] },
-      through: {
-        attributes: ['read', 'id']
-      }
-    }
-  });
-  next();
-};
+const { getUser, userFinder } = require('../../utils/middleware');
+const { Op } = require('sequelize');
 
 const usernameFinder = async (req, res, next) => {
   req.username = await User.findOne({ username: req.params.username });
@@ -52,7 +39,7 @@ userRouter.post('/', async (req, res, next) => {
 
 userRouter.get('/:id', userFinder, async (req, res, next) => {
   try {
-    const { username, name, blogs } = req.user;
+    const { username, name, blogs } = req.oneUser;
 
     res.status(200).json({
       username,
@@ -64,9 +51,14 @@ userRouter.get('/:id', userFinder, async (req, res, next) => {
   }
 });
 
-userRouter.put('/:username', tokenExtractor, usernameFinder, async (req, res, next) => {
+userRouter.put('/:username', getUser, usernameFinder, async (req, res, next) => {
   const { username } = req.body;
-  console.log(req.username)
+  const user = req.user;
+
+  if (user.username !== req.username) {
+    return res.status(400).json({ error: 'Permission required' });
+  }
+
   try {
     req.username.set({
       username

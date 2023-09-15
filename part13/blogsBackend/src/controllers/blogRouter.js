@@ -3,14 +3,14 @@ const blogRouter = express.Router();
 
 const { Op } = require('sequelize');
 const { Blog, User } = require('../models');
-const { tokenExtractor } = require('../../utils/middleware');
+const { tokenExtractor, getUser } = require('../../utils/middleware');
 
 const blogFinder = async (req, res, next) => {
   req.blog = await Blog.findByPk(req.params.id);
   next();
 };
 
-blogRouter.get('/', async (req, res) => {
+blogRouter.get('/', async (req, res, next) => {
   try {
     // we initialize an empty where query so that seqeuelize doesn't initiate where query if we are just making request for blogs
     let where = {};
@@ -40,10 +40,11 @@ blogRouter.get('/', async (req, res) => {
     res.json(blogs);
   } catch (error) {
     console.log(error);
+    next(error);
   }
 });
 
-blogRouter.post('/', tokenExtractor, async (req, res) => {
+blogRouter.post('/', getUser, async (req, res) => {
   const { year } = req.body;
 
   if (year < 1991 || year > 2023) {
@@ -51,7 +52,8 @@ blogRouter.post('/', tokenExtractor, async (req, res) => {
   }
 
   try {
-    const user = await User.findByPk(req.decodedToken.id);
+    // const user = await User.findByPk(req.decodedToken.id);
+    const user = req.user;
     const blog = await Blog.create({
       ...req.body,
       // sequelize will automatically create userId from user_id in postgres for us when we define relationships in our schema
@@ -65,6 +67,7 @@ blogRouter.post('/', tokenExtractor, async (req, res) => {
 
     res.json(blog);
   } catch (error) {
+    console.log(error);
     return res.status(400).json({ error });
   }
 });
@@ -95,9 +98,9 @@ blogRouter.put('/:id', blogFinder, async (req, res, next) => {
   }
 });
 
-blogRouter.delete('/:id', tokenExtractor, blogFinder, async (req, res) => {
+blogRouter.delete('/:id', getUser, blogFinder, async (req, res) => {
   try {
-    const user = await User.findByPk(req.decodedToken.id);
+    const user = req.user;
     const blog = req.blog;
 
     if (user.id !== blog.userId) {
