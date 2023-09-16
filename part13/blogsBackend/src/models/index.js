@@ -2,9 +2,13 @@ const Blog = require('./blogSchema');
 const Reading = require('./readingListSchema');
 const Session = require('./sessionSchema');
 const User = require('./userSchema');
+const Blacklist = require('./blackListSchema');
+const Token = require('./tokenSchema');
 
 // foreign keys are defined here
 // we define a one-to-many relationship
+User.hasOne(Token);
+Token.belongsTo(User);
 User.hasOne(Session);
 Session.belongsTo(User);
 User.hasMany(Blog);
@@ -23,5 +27,7 @@ module.exports = {
   Blog,
   User,
   Reading,
-  Session
+  Session,
+  Blacklist,
+  Token
 }

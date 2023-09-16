@@ -57,6 +57,11 @@ userRouter.get('/:id', userFinder, async (req, res, next) => {
 userRouter.put('/:username', getUser, usernameFinder, async (req, res, next) => {
   const { username } = req.body;
   const user = req.user;
+  const session = req.session;
+
+  if (!session) {
+    return res.status(400).json({ error: "must be logged in to do this" });
+  }
 
   if (user.username !== req.username) {
     return res.status(400).json({ error: 'Permission required' });

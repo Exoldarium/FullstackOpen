@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const loginRouter = require('express').Router();
 
 const { SECRET } = require('../../utils/config');
-const { User, Session } = require('../models');
+const { User, Session, Token } = require('../models');
 
 loginRouter.post('/', async (req, res, next) => {
   const { username, password } = req.body;
@@ -14,6 +14,7 @@ loginRouter.post('/', async (req, res, next) => {
         disabled: false
       }
     });
+
     const session = await Session.findOne({
       where: {
         userId: user.id,
@@ -25,15 +26,11 @@ loginRouter.post('/', async (req, res, next) => {
     if (session) {
       return res.status(405).json({ error: 'Already logged in' });
     }
-    // check if the user is disabled from the system
-    if (!user) {
-      return res.status(405).json({ error: 'Permission required' });
-    }
 
     await Session.create({
       userId: user.id,
-      active: true
-    })
+      active: true,
+    });
 
     const hardcodedPassword = password === 'secret';
 
@@ -49,6 +46,11 @@ loginRouter.post('/', async (req, res, next) => {
     }
 
     const token = jwt.sign(userToken, SECRET, { expiresIn: 43200 });
+
+    await Token.create({
+      userId: user.id,
+      token
+    });
 
     await user.save();
 

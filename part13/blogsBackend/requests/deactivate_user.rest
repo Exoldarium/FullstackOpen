@@ -1,11 +1,7 @@
-POST http://localhost:3001/api/blogs
+PUT http://localhost:3001/api/deactivate/1
 Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhcm5AdGVzdC5jb20iLCJpZCI6MiwiaWF0IjoxNjk0ODcwMTA5LCJleHAiOjE2OTQ5MTMzMDl9.-NzLN3kgD4dwas59Eq6fy7Q9NtSeq1FlYv6l7n5VdhI
 
 {
-  "url": "catsrule.com",
-  "title": "catsssss",
-  "likes": 40,
-  "author": "Tarn",
-  "year": 1992
+  "disabled": true
 }

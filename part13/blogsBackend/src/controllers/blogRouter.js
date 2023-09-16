@@ -46,6 +46,12 @@ blogRouter.get('/', async (req, res, next) => {
 
 blogRouter.post('/', getUser, async (req, res) => {
   const { year } = req.body;
+  const user = req.user;
+  const session = req.session;
+
+  if (!session) {
+    return res.status(400).json({ error: "must be logged in to do this" });
+  }
 
   if (year < 1991 || year > 2023) {
     return res.status(400).json({ error: "must enter a year after 1991 and before 2023" });
@@ -80,8 +86,14 @@ blogRouter.get('/:id', blogFinder, async (req, res, next) => {
   }
 });
 
-blogRouter.put('/:id', blogFinder, async (req, res, next) => {
+blogRouter.put('/:id', getUser, blogFinder, async (req, res, next) => {
   const { url, author, title, likes } = req.body;
+  const user = req.user;
+  const session = req.session;
+
+  if (!session) {
+    return res.status(400).json({ error: "must be logged in to do this" });
+  }
 
   try {
     req.blog.set({
@@ -99,6 +111,13 @@ blogRouter.put('/:id', blogFinder, async (req, res, next) => {
 });
 
 blogRouter.delete('/:id', getUser, blogFinder, async (req, res) => {
+  const user = req.user;
+  const session = req.session;
+
+  if (!session) {
+    return res.status(400).json({ error: "must be logged in to do this" });
+  }
+
   try {
     const user = req.user;
     const blog = req.blog;

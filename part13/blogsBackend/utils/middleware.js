@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { SECRET } = require('./config');
-const { User, Blog, Session } = require('../src/models');
+const { User, Blog, Session, Blacklist } = require('../src/models');
 const { Op } = require('sequelize');
 
 const errorHandler = (error, res, req, next) => {
@@ -37,7 +37,7 @@ const userFinder = async (req, res, next) => {
   next();
 };
 
-const tokenExtractor = (req, res, next) => {
+const tokenExtractor = async (req, res, next) => {
   const auth = req.get('authorization');
 
   if (auth && auth.toLowerCase().startsWith('bearer ')) {
@@ -52,6 +52,18 @@ const tokenExtractor = (req, res, next) => {
 }
 
 const getUser = async (req, res, next) => {
+  // check if the user is blacklisted
+  const checkBlacklist = await Blacklist.findOne({
+    where: {
+      token: req.token
+    }
+  });
+
+  // if they are deny access
+  if (checkBlacklist) {
+    return res.status(405).json({ error: 'Permission required' });
+  }
+
   const decodedToken = jwt.verify(req.token, SECRET);
 
   if (!decodedToken.id) {
@@ -63,7 +75,7 @@ const getUser = async (req, res, next) => {
     where: {
       userId: decodedToken.id
     }
-  })
+  });
   req.user = user;
   req.session = session;
   next();
